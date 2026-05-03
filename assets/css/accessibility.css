@@ -1,0 +1,279 @@
+/* ============================================================================
+   accessibility.css
+   Adaptive accessibility layer — prompt UI, reduced-noise mode, and
+   component-level hooks. Pairs with accessibility.js.
+
+   Conventions
+   - All public class/attribute names are `a11y-*` or `data-a11y-*`.
+   - Visual mode is driven by a single root flag: `[data-a11y-mode="reduced"]`
+     applied to <html>. Components opt in via `data-accessible="..."`.
+   - Animations are short and subtle; everything respects prefers-reduced-motion.
+   ============================================================================ */
+
+/* ---------- Design tokens (default + reduced-noise overrides) -------------- */
+
+:root {
+  --a11y-prompt-bg: rgba(20, 22, 30, 0.92);
+  --a11y-prompt-fg: #ffffff;
+  --a11y-prompt-muted: #c8d0e6;
+  --a11y-prompt-accent: #6c8cff;
+  --a11y-prompt-accent-fg: #ffffff;
+  --a11y-prompt-radius: 14px;
+  --a11y-prompt-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  --a11y-focus-ring: 3px solid #6c8cff;
+  --a11y-transition: 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* When reduced-noise mode is active, document-level tokens shift toward
+   higher contrast, calmer surfaces, and more breathing room. Components
+   that consume these (or are tagged data-accessible) get the change for
+   free without rewriting their styles. */
+:root[data-a11y-mode="reduced"] {
+  --a11y-text-color: #0b0f1a;
+  --a11y-bg-color: #fafbfd;
+  --a11y-line-height: 1.7;
+  --a11y-letter-spacing: 0.01em;
+  --a11y-font-scale: 1.06;
+}
+
+/* ---------- Reduced-noise mode: global DOM adjustments --------------------- */
+
+:root[data-a11y-mode="reduced"] body {
+  background: var(--a11y-bg-color, #fafbfd) !important;
+  color: var(--a11y-text-color, #0b0f1a) !important;
+}
+
+/* Strip noisy background imagery so text wins the visual hierarchy. */
+:root[data-a11y-mode="reduced"] body,
+:root[data-a11y-mode="reduced"] [data-accessible] {
+  background-image: none !important;
+}
+
+/* Calm down decorative gradients without nuking layout-critical ones. */
+:root[data-a11y-mode="reduced"] [data-accessible="surface"] {
+  background: var(--a11y-bg-color, #fafbfd) !important;
+  box-shadow: none !important;
+  border: 1px solid #d9deea !important;
+}
+
+/* Text blocks: more spacing, slightly larger, no tight tracking. */
+:root[data-a11y-mode="reduced"] [data-accessible="text"],
+:root[data-a11y-mode="reduced"] [data-accessible] p,
+:root[data-a11y-mode="reduced"] [data-accessible] li {
+  line-height: var(--a11y-line-height, 1.7);
+  letter-spacing: var(--a11y-letter-spacing, 0.01em);
+  font-size: calc(1em * var(--a11y-font-scale, 1.06));
+  color: var(--a11y-text-color, #0b0f1a);
+}
+
+/* The Three.js canvas is treated as ambient noise: dim it, soften it,
+   stop it competing with foreground content. JS may also tell registered
+   scenes to throttle particles/shaders for real performance wins. */
+:root[data-a11y-mode="reduced"] [data-accessible="three-canvas"],
+:root[data-a11y-mode="reduced"] #three-canvas {
+  filter: brightness(0.55) saturate(0.7) contrast(0.95);
+  opacity: 0.75;
+  transition: filter var(--a11y-transition), opacity var(--a11y-transition);
+}
+
+/* Disable purely decorative motion globally in reduced mode. Components
+   keep functional animation (e.g., focus rings, prompt slide-in). */
+:root[data-a11y-mode="reduced"] [data-accessible-motion="decorative"] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Honor the OS-level preference too. */
+@media (prefers-reduced-motion: reduce) {
+  :root [data-accessible-motion="decorative"] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Prompt: container ---------------------------------------------- */
+
+.a11y-prompt {
+  position: fixed;
+  z-index: 2147483000; /* above app chrome but below browser dialogs */
+  max-width: 360px;
+  padding: 14px 16px 12px;
+  border-radius: var(--a11y-prompt-radius);
+  background: var(--a11y-prompt-bg);
+  color: var(--a11y-prompt-fg);
+  box-shadow: var(--a11y-prompt-shadow);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+
+  /* Default anchor: bottom-right. JS may override with inline styles
+     when the prompt is positioned near the area of struggle. */
+  right: 18px;
+  bottom: 18px;
+
+  /* Animate in. Class `is-visible` flips opacity/transform. */
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity var(--a11y-transition),
+    transform var(--a11y-transition);
+}
+
+.a11y-prompt.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.a11y-prompt[hidden] {
+  display: none !important;
+}
+
+.a11y-prompt__title {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 4px;
+  letter-spacing: 0.01em;
+}
+
+.a11y-prompt__body {
+  margin: 0 0 12px;
+  color: var(--a11y-prompt-muted);
+  font-size: 13px;
+}
+
+.a11y-prompt__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.a11y-prompt__btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: var(--a11y-prompt-fg);
+  transition: background var(--a11y-transition), border-color var(--a11y-transition);
+}
+
+.a11y-prompt__btn--primary {
+  background: var(--a11y-prompt-accent);
+  color: var(--a11y-prompt-accent-fg);
+  border-color: var(--a11y-prompt-accent);
+}
+
+.a11y-prompt__btn--primary:hover {
+  background: #5a78f0;
+  border-color: #5a78f0;
+}
+
+.a11y-prompt__btn--ghost {
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--a11y-prompt-muted);
+}
+
+.a11y-prompt__btn--ghost:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--a11y-prompt-fg);
+}
+
+.a11y-prompt__btn--link {
+  background: transparent;
+  color: var(--a11y-prompt-muted);
+  padding: 6px 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-left: auto; /* push "don't show again" to the far right */
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.a11y-prompt__btn--link:hover {
+  color: var(--a11y-prompt-fg);
+}
+
+.a11y-prompt__btn:focus-visible {
+  outline: var(--a11y-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Close (×) for keyboard parity — visually subtle. */
+.a11y-prompt__close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: var(--a11y-prompt-muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.a11y-prompt__close:hover { color: var(--a11y-prompt-fg); }
+.a11y-prompt__close:focus-visible {
+  outline: var(--a11y-focus-ring);
+  outline-offset: 2px;
+}
+
+/* When anchored near the area of struggle, JS sets data-anchored="true"
+   and adjusts inline `top`/`left`. We only fine-tune the entry animation
+   so the prompt appears to come *from* that area. */
+.a11y-prompt[data-anchored="true"] {
+  transform: translateY(0) scale(0.96);
+}
+.a11y-prompt[data-anchored="true"].is-visible {
+  transform: translateY(0) scale(1);
+}
+
+/* ---------- Prompt appearance under reduced-noise mode --------------------- */
+
+:root[data-a11y-mode="reduced"] .a11y-prompt {
+  background: #ffffff;
+  color: #0b0f1a;
+  box-shadow: 0 8px 24px rgba(11, 15, 26, 0.18);
+  border: 1px solid #d9deea;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+:root[data-a11y-mode="reduced"] .a11y-prompt__body { color: #3a4358; }
+:root[data-a11y-mode="reduced"] .a11y-prompt__btn--ghost {
+  border-color: #c2cadb;
+  color: #3a4358;
+}
+:root[data-a11y-mode="reduced"] .a11y-prompt__btn--ghost:hover {
+  border-color: #6c8cff;
+  color: #0b0f1a;
+}
+:root[data-a11y-mode="reduced"] .a11y-prompt__btn--link { color: #3a4358; }
+
+/* ---------- Mobile / narrow viewports -------------------------------------- */
+
+@media (max-width: 480px) {
+  .a11y-prompt {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: none;
+  }
+}
+
+/* ---------- Legacy compatibility (existing portfolio markup) --------------- */
+
+/* Older styles in this project used body.a11y-reduce-bg. Keep that working
+   by aliasing it to the new mode flag rules where reasonable. */
+body.a11y-reduce-bg #three-canvas {
+  filter: brightness(0.55) saturate(0.7) contrast(0.95);
+  opacity: 0.75;
+  transition: filter var(--a11y-transition), opacity var(--a11y-transition);
+}

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,100;0,300;0,400;0,500;1,300&family=Unbounded:wght@300;400;700;900&display=swap" rel="stylesheet"/>
 <link href="./assets/css/style.css" rel="stylesheet" type="text/css" />
-
+<link href="./assets/css/accessibility.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
@@ -30,6 +29,7 @@
   <div class="ld-track"><div class="ld-fill"></div></div>
   <div class="ld-pct">Loading<b id="lpc"> 0%</b></div>
 </div>
+<button id="a11y-prompt" class="a11y-prompt" aria-label="Open accessibility options">Need focus help?</button>
 
 <!-- NAV -->
 <nav id="navbar">
@@ -649,9 +649,27 @@
   <div class="footer-copy">© 2025 Ganesh Adhikari · Kathmandu, Nepal · All rights reserved</div>
 </footer>
 
+<div id="a11y-panel" aria-live="polite" aria-label="Accessibility options" class="a11y-hidden">
+  <button id="a11y-close" class="a11y-close" aria-label="Close accessibility panel">×</button>
+  <div class="a11y-title">Having trouble reading the text?</div>
+  <div class="a11y-sub">It can be hard to focus with animated backgrounds. Reduce background intensity below.</div>
+  <div class="a11y-controls">
+    <label class="a11y-toggle">
+      <input type="checkbox" id="a11y-reduce-toggle" />
+      <span>Reduce background distractions</span>
+    </label>
+    <div class="a11y-slider-wrap">
+      <label for="a11y-intensity">Background intensity</label>
+      <input type="range" id="a11y-intensity" min="0" max="100" value="60" />
+    </div>
+    <button id="a11y-high-contrast" class="a11y-btn">Increase text contrast</button>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════════════════════ -->
 <!-- THREE.JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="./assets/js/script.js" ></script>
+<script src="./assets/js/accessibility.js"></script>
 </body>
 </html>

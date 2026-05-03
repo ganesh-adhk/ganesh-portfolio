@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adaptive Accessibility Layer — Demo</title>
+
+  <!--
+    Drop-in integration example.
+
+    The accessibility layer is composed of two files (in this project they
+    live under /assets/{css,js}/). The relative paths below assume this
+    demo lives one level deep — adjust if you reorganize.
+  -->
+  <link rel="stylesheet" href="../assets/css/accessibility.css" />
+
+  <style>
+    /* Demo-only styles — your app's real styles go elsewhere. */
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      color: #e7ecf6;
+      background:
+        radial-gradient(1200px 800px at 80% 0%, #1f2a52 0%, transparent 60%),
+        radial-gradient(900px 600px at 0% 100%, #3b1f4b 0%, transparent 55%),
+        #0b0f1a;
+      min-height: 100vh;
+    }
+
+    .stage {
+      position: relative;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+    }
+
+    /* Animated decorative canvas — stand-in for a real Three.js scene. */
+    #three-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      transition: filter 220ms ease, opacity 220ms ease;
+    }
+
+    h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; }
+    .lede { color: #b9c2da; max-width: 60ch; }
+
+    .card {
+      background: rgba(20, 24, 40, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin: 24px 0;
+      backdrop-filter: blur(6px);
+    }
+
+    .card h2 { margin-top: 0; font-size: 18px; }
+    .card p  { color: #c8d0e6; margin: 8px 0 0; }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: transparent;
+      color: #e7ecf6;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: #6c8cff; }
+    .btn:focus-visible { outline: 3px solid #6c8cff; outline-offset: 2px; }
+
+    .debug {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace;
+      background: rgba(0, 0, 0, 0.55);
+      color: #cfe;
+      padding: 6px 8px;
+      border-radius: 6px;
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+    PLACEHOLDER for a Three.js canvas. In the real app this is whatever the
+    Three renderer attaches to. We tag it with `data-accessible="three-canvas"`
+    so accessibility.css can dim/desaturate it in reduced-noise mode.
+
+    For real performance gains (not just visual calming), the scene
+    registers itself with `A11y.register(...)` in the script below to
+    cut particle counts, animation speed, and shader load.
+  -->
+  <canvas id="three-canvas" data-accessible="three-canvas"
+          data-accessible-motion="decorative"
+          aria-hidden="true"></canvas>
+
+  <main class="stage">
+    <h1 data-accessible="text">Reading-friendly mode, on demand.</h1>
+
+    <p class="lede" data-accessible="text">
+      This page watches for signs that the visual layer is getting in the
+      way — frantic mouse movement, scrolling back-and-forth, hovering the
+      same paragraph repeatedly — and offers to turn the noise down. You
+      can enable it manually any time with the button below.
+    </p>
+
+    <!-- Surface that responds to the mode flag (loses its glassy bg). -->
+    <section class="card" data-accessible="surface">
+      <h2 data-accessible="text">Try the heuristics</h2>
+      <p data-accessible="text">
+        Wiggle your mouse rapidly without clicking anything, or scroll up
+        and down quickly, or hover this paragraph several times in a row.
+        After about a second the prompt will appear in the corner — or
+        nearer the element it thinks you were struggling with.
+      </p>
+      <div class="controls">
+        <button class="btn" type="button" id="btn-enable">Enable calm view</button>
+        <button class="btn" type="button" id="btn-disable">Disable</button>
+        <button class="btn" type="button" id="btn-prompt">Show prompt now</button>
+        <button class="btn" type="button" id="btn-reset">Reset preferences</button>
+      </div>
+    </section>
+
+    <section class="card" data-accessible="surface">
+      <h2 data-accessible="text">How it integrates</h2>
+      <p data-accessible="text">
+        Components opt in by adding <code>data-accessible="text"</code> or
+        <code>data-accessible="surface"</code>. Three.js scenes register a
+        callback so they can throttle particles, slow animations, or
+        switch to a simpler shader when the calm view turns on.
+      </p>
+    </section>
+  </main>
+
+  <!-- Tiny debug readout so reviewers can see the score climb in real time. -->
+  <div class="debug" id="debug">score: 0 · mode: off</div>
+
+  <!-- Accessibility layer — must come after target DOM exists, or be
+       deferred. It boots on DOMContentLoaded either way. -->
+  <script src="../assets/js/accessibility.js" defer></script>
+
+  <script defer>
+    /* ----------------------------------------------------------------
+       Demo glue: faux Three.js scene + manual controls + debug readout.
+       In a real app the Three.js block would be your renderer and the
+       A11y.register hook is where you'd reduce particle counts, etc.
+       ---------------------------------------------------------------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      // -------- Faux Three.js animation on the canvas (2D for demo) -----
+      const canvas = document.getElementById('three-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let speedScale = 1;
+      let particleCount = 140;
+
+      function resize() {
+        canvas.width = window.innerWidth * devicePixelRatio;
+        canvas.height = window.innerHeight * devicePixelRatio;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function rebuildParticles() {
+        particles = Array.from({ length: particleCount }, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.6 * devicePixelRatio,
+          vy: (Math.random() - 0.5) * 0.6 * devicePixelRatio,
+          r: (Math.random() * 2 + 0.8) * devicePixelRatio,
+        }));
+      }
+      rebuildParticles();
+
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const p of particles) {
+          p.x += p.vx * speedScale;
+          p.y += p.vy * speedScale;
+          if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+          if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(180, 200, 255, 0.45)';
+          ctx.fill();
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+
+      // -------- Register with the accessibility layer ------------------
+      // Wait a tick so window.A11y is defined (accessibility.js boots on
+      // DOMContentLoaded too, so this fires after).
+      queueMicrotask(() => {
+        if (!window.A11y) return;
+        window.A11y.register({
+          onEnable() {
+            // Real Three.js wins:
+            //   scene.fog.density *= 0.5
+            //   particles.material.opacity = 0.2
+            //   renderer.setPixelRatio(1)
+            //   composer.removePass(bloomPass)
+            speedScale = 0.25;
+            particleCount = 35;
+            rebuildParticles();
+          },
+          onDisable() {
+            speedScale = 1;
+            particleCount = 140;
+            rebuildParticles();
+          },
+        });
+      });
+
+      // -------- Manual controls ---------------------------------------
+      const $ = (id) => document.getElementById(id);
+      $('btn-enable').addEventListener('click',  () => window.A11y && A11y.enable());
+      $('btn-disable').addEventListener('click', () => window.A11y && A11y.disable());
+      $('btn-prompt').addEventListener('click',  () => window.A11y && A11y.showPromptNow());
+      $('btn-reset').addEventListener('click',   () => window.A11y && A11y.reset());
+
+      // -------- Debug readout -----------------------------------------
+      const debug = document.getElementById('debug');
+      setInterval(() => {
+        if (!window.A11y) return;
+        const s = window.A11y.getScore().toFixed(0).padStart(3, ' ');
+        const mode = window.A11y.isEnabled() ? 'ON ' : 'off';
+        debug.textContent = `score: ${s} · mode: ${mode}`;
+      }, 250);
+
+      // Listen on the public custom event too, just to demonstrate.
+      document.addEventListener('a11y:mode-change', (e) => {
+        console.log('[demo] a11y mode →', e.detail.enabled ? 'reduced' : 'normal');
+      });
+    });
+  </script>
+</body>
+</html>
