@@ -1,811 +1,657 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ganesh Adhikari - Senior Laravel & Full Stack Developer | Nepal</title>
-    <meta name="description" content="Professional Laravel developer based in Kathmandu, Nepal with expertise in React Native, DevOps, and Android development.">
-    <meta name="keywords" content="Laravel Developer, Nepal, Ganesh Adhikari, PHP Developer, React Native Developer, Full Stack Developer, Kathmandu, Web Developer">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="icon" href="./assets/files/favicon.ico" type="image/x-icon" />
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2563eb',
-                        secondary: '#0f172a',
-                        accent: '#f97316'
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="./assets/css/style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ganesh Adhikari — Senior Laravel & Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,100;0,300;0,400;0,500;1,300&family=Unbounded:wght@300;400;700;900&display=swap" rel="stylesheet"/>
+<link href="./assets/css/style.css" rel="stylesheet" type="text/css" />
+
 </head>
-<body class="text-gray-800">
-    <!-- Header -->
-    <header class="fixed w-full bg-white shadow-sm z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <a href="#" class="text-2xl font-bold text-primary flex items-center">
-                    <i class="fas fa-code mr-2"></i>
-                    <span>Ganesh<span class="text-secondary">Adhikari</span></span>
-                </a>
-            </div>
-            
-            <nav class="hidden md:block">
-                <ul class="flex space-x-8">
-                    <li><a href="#home" class="nav-link text-secondary font-medium">Home</a></li>
-                    <li><a href="#about" class="nav-link text-secondary font-medium">About</a></li>
-                    <li><a href="#experience" class="nav-link text-secondary font-medium">Experience</a></li>
-                    <li><a href="#skills" class="nav-link text-secondary font-medium">Skills</a></li>
-                    <li><a href="#projects" class="nav-link text-secondary font-medium">Projects</a></li>
-                    <li><a href="#contact" class="nav-link text-secondary font-medium">Contact</a></li>
-                </ul>
-            </nav>
-            
-            <button id="mobile-menu-button" class="md:hidden text-gray-600">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- GRAIN -->
+<div id="grain"></div>
+
+<!-- MAIN THREE.JS CANVAS -->
+<canvas id="three-canvas"></canvas>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-code"><span>▋</span> initializing portfolio.exe</div>
+  <div class="ld-name">Ganesh <b>Adhikari</b></div>
+  <div class="ld-track"><div class="ld-fill"></div></div>
+  <div class="ld-pct">Loading<b id="lpc"> 0%</b></div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">GA<span>.</span></a>
+  <ul class="nav-links">
+    <li><span class="nav-dot"></span></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="mailto:ganesh@adhikariganesh.com.np" class="nav-hire">Hire Me</a></li>
+  </ul>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Available for opportunities
+      </div>
+      <h1 class="hero-title">
+<!--        <span class="tline"><span class="tinner">SENIOR</span></span>-->
+        <span class="tline"><span class="tinner">SOFTWARE</span></span>
+        <span class="tline"><span class="tinner">ENGINEER</span></span>
+      </h1>
+      <p class="hero-sub">Full Stack Engineer <b>&amp;</b> Backend Architect<br/>5+ Years Building Production Systems</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="hero-meta-val">5<span>+</span></div>
+          <div class="hero-meta-label">Years Exp.</div>
         </div>
-        
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 px-4 shadow-lg">
-            <ul class="space-y-4">
-                <li><a href="#home" class="block font-medium text-secondary">Home</a></li>
-                <li><a href="#about" class="block font-medium text-secondary">About</a></li>
-                <li><a href="#experience" class="block font-medium text-secondary">Experience</a></li>
-                <li><a href="#skills" class="block font-medium text-secondary">Skills</a></li>
-                <li><a href="#projects" class="block font-medium text-secondary">Projects</a></li>
-                <li><a href="#contact" class="block font-medium text-secondary">Contact</a></li>
-            </ul>
+        <div class="hero-sep"></div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-val">3<span>+</span></div>
+          <div class="hero-meta-label">Key Projects</div>
         </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="pt-32 pb-20 hero-pattern">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-12 md:mb-0 animate__animated animate__fadeInLeft">
-                <h1 class="text-4xl md:text-5xl font-bold text-secondary mb-4">
-                    Hi, I'm <span class="text-primary">Ganesh Adhikari</span>
-                </h1>
-                <h2 class="text-2xl md:text-3xl font-semibold text-gray-700 mb-6">
-                    Senior Laravel & Full Stack Developer
-                </h2>
-                <p class="text-lg text-gray-600 mb-8 max-w-xl">
-                    I build robust, scalable web and mobile applications using Laravel, React Native, and modern DevOps practices. Based in Kathmandu, Nepal with 5+ years of professional experience.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#contact" class="bg-primary hover:bg-blue-700 text-white py-3 px-8 rounded-lg transition duration-300 flex items-center">
-                        <i class="fas fa-paper-plane mr-2"></i> Contact Me
-                    </a>
-                    <a href="#projects" class="bg-white hover:bg-gray-100 text-primary  py-3 px-8 rounded-lg border border-primary transition duration-300 flex items-center">
-                        <i class="fas fa-laptop-code mr-2"></i> View Projects
-                    </a>
-                    <a 
-                        href="./assets/files/cv.pdf" 
-                        download 
-                        class="bg-white text-secondary hover:bg-blue-50 hover:text-primary  py-3 px-8 rounded-lg border border-secondary transition duration-300 flex items-center"
-                    >
-                        <i class="fas fa-file-pdf mr-2 text-accent"></i> Download CV
-                    </a>
-
-                </div>
-                
-                <div class="mt-10">
-                    <h3 class="text-lg font-semibold text-secondary mb-4">Tech Stack Expertise:</h3>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="tech-icon">
-                            <i class="fab fa-laravel"></i>
-                        </div>
-                        <div class="tech-icon">
-                            <i class="fab fa-react"></i>
-                        </div>
-                        <div class="tech-icon">
-                            <i class="fab fa-docker"></i>
-                        </div>
-                        <div class="tech-icon">
-                            <i class="fab fa-aws"></i>
-                        </div>
-                        <div class="tech-icon">
-                            <i class="fab fa-android"></i>
-                        </div>
-                        <div class="tech-icon">
-                            <i class="fab fa-jenkins"></i>
-                        </div>
-                        <div class="tech-icon">
-                            <img src="./assets/files/asterisk.svg" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:w-1/2 flex justify-center animate__animated animate__fadeInRight">
-                <div class="relative">
-                    <div class="bg-primary rounded-full w-80 h-80 absolute -top-6 -left-6 -z-10 opacity-10">
-                    </div>
-                    <div class="relative floating">
-                        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl w-64 h-80 shadow-xl flex items-end overflow-hidden">
-                            <div class="w-full h-3/4 bg-white rounded-t-2xl p-6">
-                                <div class="flex items-center mb-4">
-                                    <div class="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16">
-                                        <img class="rounded-xl" src="./assets/files/ganesh_image_2.jpeg" alt="">
-                                    </div>
-                                    <div class="ml-4">
-                                        <h3 class="font-bold text-gray-800">Ganesh Adhikari</h3>
-                                        <p class="text-sm text-gray-600">Laravel Developer</p>
-                                    </div>
-                                </div>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">PHP</span>
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">AWS</span>
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Docker</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="hero-sep"></div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-val">3<span>+</span></div>
+          <div class="hero-meta-label">Companies</div>
         </div>
-    </section>
+      </div>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn btn-primary">▶ View Projects</a>
+        <a href="#contact" class="btn btn-outline">✉ Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-3d-frame">
+        <canvas id="hero-canvas-mini"></canvas>
+        <div class="hero-frame-label">three.js / webgl</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
 
-    <!-- About Section -->
-    <section id="about" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="section-header text-3xl font-bold text-secondary inline-block">About Me</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Learn more about my background and expertise</p>
-            </div>
-            
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-2/5">
-                    <div class="relative">
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl transform rotate-3"></div>
-                        <div class="bg-gray-200 border-2 border-dashed rounded-2xl w-full h-96 relative overflow-hidden">
+<!-- TECH STRIP -->
+<div id="techstrip">
+  <div class="strip-track" id="strip">
+    <div class="strip-item"><span class="strip-dot"></span>PHP</div>
+    <div class="strip-item"><span class="strip-dot"></span>Laravel</div>
+    <div class="strip-item"><span class="strip-dot"></span>React.js</div>
+    <div class="strip-item"><span class="strip-dot"></span>React Native</div>
+    <div class="strip-item"><span class="strip-dot"></span>Docker</div>
+    <div class="strip-item"><span class="strip-dot"></span>AWS</div>
+    <div class="strip-item"><span class="strip-dot"></span>MySQL</div>
+    <div class="strip-item"><span class="strip-dot"></span>PostgreSQL</div>
+    <div class="strip-item"><span class="strip-dot"></span>Redis</div>
+    <div class="strip-item"><span class="strip-dot"></span>WebSockets</div>
+    <div class="strip-item"><span class="strip-dot"></span>Jenkins CI/CD</div>
+    <div class="strip-item"><span class="strip-dot"></span>REST API</div>
+    <div class="strip-item"><span class="strip-dot"></span>SaaS Architecture</div>
+    <div class="strip-item"><span class="strip-dot"></span>System Design</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="strip-item"><span class="strip-dot"></span>PHP</div>
+    <div class="strip-item"><span class="strip-dot"></span>Laravel</div>
+    <div class="strip-item"><span class="strip-dot"></span>React.js</div>
+    <div class="strip-item"><span class="strip-dot"></span>React Native</div>
+    <div class="strip-item"><span class="strip-dot"></span>Docker</div>
+    <div class="strip-item"><span class="strip-dot"></span>AWS</div>
+    <div class="strip-item"><span class="strip-dot"></span>MySQL</div>
+    <div class="strip-item"><span class="strip-dot"></span>PostgreSQL</div>
+    <div class="strip-item"><span class="strip-dot"></span>Redis</div>
+    <div class="strip-item"><span class="strip-dot"></span>WebSockets</div>
+    <div class="strip-item"><span class="strip-dot"></span>Jenkins CI/CD</div>
+    <div class="strip-item"><span class="strip-dot"></span>REST API</div>
+    <div class="strip-item"><span class="strip-dot"></span>SaaS Architecture</div>
+    <div class="strip-item"><span class="strip-dot"></span>System Design</div>
+  </div>
+</div>
 
-
-                            <img class="rounded-xl" src="./assets/files/ganesh_image_1.jpeg" alt="">
-
-
-
-                        </div>
-                    </div>
-                    <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl">
-                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-map-marker-alt text-primary mr-2"></i> Location
-                        </h4>
-                        <p class="text-gray-600 mb-4">Maharajgunj, Kathmandu, Nepal</p>
-                        
-                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-envelope text-primary mr-2"></i> Email
-                        </h4>
-                        <p class="text-gray-600 mb-4">ganeshadk786@gmail.com</p>
-                        
-                        <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-phone text-primary mr-2"></i> Phone
-                        </h4>
-                        <p class="text-gray-600">+977-9864434149</p>
-                    </div>
-                </div>
-                
-                <div class="md:w-3/5">
-                    <h3 class="text-2xl font-semibold text-secondary mb-4">Senior Laravel & Full Stack Developer based in Kathmandu, Nepal</h3>
-                    <p class="text-gray-600 mb-6">
-                        I'm a passionate full-stack developer specializing in Laravel, React Native, and modern web technologies. With over 5 years of professional experience, I've delivered robust web and mobile applications for diverse industries including finance, education, hospitality, and e-commerce.
-                    </p>
-                    <p class="text-gray-600 mb-6">
-                        My expertise includes designing scalable architectures, developing RESTful APIs, implementing DevOps practices with Jenkins and Docker, and leading development teams to deliver high-quality solutions on time.
-                    </p>
-                    
-                    <div class="bg-gray-50 p-6 rounded-2xl mt-8">
-                        <h4 class="font-semibold text-gray-700 mb-4 flex items-center">
-                            <i class="fas fa-graduation-cap text-primary mr-2"></i> Education
-                        </h4>
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h5 class="font-bold text-secondary">Bsc. CSIT</h5>
-                                <p class="text-gray-600">Tribhuwan University, PNC - Pokhara, Nepal</p>
-                            </div>
-                            <span class="bg-blue-100 text-primary text-sm font-semibold px-3 py-1 rounded-full">2018 - 2023</span>
-                        </div>
-                        <p class="text-gray-600">
-                            A valuable learning experience that taught me how to contribute to team-based projects in various stacks and roles.
-                        </p>
-                    </div>
-                </div>
-            </div>
+<!-- ════════ ABOUT ════════ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="reveal-left">
+        <div class="sec-label"><span class="sec-num">01 /</span> About</div>
+        <h2 class="about-title">Crafting Systems<br/><span>That Scale.</span></h2>
+        <div class="about-location">📍 Kathmandu, Nepal</div>
+        <p class="about-body">
+          I'm <b>Ganesh Adhikari</b>, a Senior Sftware Engineer & Full Stack Developer with over 5 years of hands-on experience engineering production-grade web and mobile applications.
+        </p>
+        <p class="about-body">
+          I specialize in <b>backend architecture</b>, <b>SaaS multi-tenant systems</b>, and <b>REST API design</b> — delivering across fintech, education, hospitality and Business Operation domains. I bring DevOps practices (Docker, JENKINS CI/CD) into everything I build to ensure smooth, automated delivery.
+        </p>
+        <p class="about-body">
+          Currently at <b>Ringaze Pvt. Ltd.</b>, leading enterprise voice broadcasting systems. <b>Open to part-time, remote, or contract opportunities worldwide.</b>
+        </p>
+        <div class="about-competencies">
+          <div class="competency reveal" style="transition-delay:.1s">
+            <div class="competency-icon">🏗</div>
+            <div class="competency-text"><b>System Architecture & Design</b>Scalable backend patterns for SaaS and multi-tenant systems</div>
+          </div>
+          <div class="competency reveal" style="transition-delay:.2s">
+            <div class="competency-icon">🔗</div>
+            <div class="competency-text"><b>API Development & Integration</b>RESTful APIs built for performance and developer experience</div>
+          </div>
+          <div class="competency reveal" style="transition-delay:.3s">
+            <div class="competency-icon">🚀</div>
+            <div class="competency-text"><b>DevOps & Deployment Automation</b>Docker pipelines, Jenkins CI/CD, AWS infrastructure</div>
+          </div>
+          <div class="competency reveal" style="transition-delay:.4s">
+            <div class="competency-icon">📱</div>
+            <div class="competency-text"><b>Full Lifecycle Development</b>From architecture to mobile app integration and production deploy</div>
+          </div>
         </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="py-20 bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="section-header text-3xl font-bold text-secondary inline-block">Technical Skills</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">My technical expertise as a Laravel developer in Nepal's tech ecosystem</p>
+      </div>
+      <div class="reveal-right">
+        <div class="about-visual">
+          <div class="about-card">
+            <div class="about-card-title">At a Glance</div>
+            <div class="about-stat-grid">
+              <div>
+                <div class="about-stat-val">5<span>+</span></div>
+                <div class="about-stat-label">Years Experience</div>
+              </div>
+              <div>
+                <div class="about-stat-val">3<span>+</span></div>
+                <div class="about-stat-label">Production SaaS Apps</div>
+              </div>
+              <div>
+                <div class="about-stat-val">10<span>+</span></div>
+                <div class="about-stat-label">Technologies</div>
+              </div>
+              <div>
+                <div class="about-stat-val">3</div>
+                <div class="about-stat-label">Domains Served</div>
+              </div>
             </div>
-            
-            <!-- Skill Categories -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                <div class="bg-white p-6 rounded-2xl shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                            <i class="fas fa-server text-primary text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-secondary">Backend Development</h3>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-laravel text-primary mr-2"></i> Laravel
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">95%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-11/12"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-php text-primary mr-2"></i> PHP
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-10/12"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fas fa-code text-primary mr-2"></i> RESTful APIs
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-10/12"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                            <i class="fas fa-laptop-code text-primary text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-secondary">Frontend & Mobile</h3>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-react text-primary mr-2"></i> React
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">85%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-9/12"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-react text-primary mr-2"></i> React Native
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">75%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-3/4"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-js text-primary mr-2"></i> JavaScript
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">88%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-11/12"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-2xl shadow-sm">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                            <i class="fas fa-cloud text-primary text-xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-secondary">DevOps & Tools</h3>
-                    </div>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-docker text-primary mr-2"></i> Docker
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">90%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-10/12"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-aws text-primary mr-2"></i> AWS
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">85%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-9/12"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium text-gray-700 flex items-center">
-                                    <i class="fab fa-jenkins text-primary mr-2"></i> Jenkins
-                                </span>
-                                <span class="text-sm font-medium text-gray-700">70%</span>
-                            </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-8/12"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="about-card">
+            <div class="about-card-title">Availability</div>
+            <div class="about-open">
+              <div class="about-open-text">
+                Open to full-time positions,<br/>
+                remote contracts &amp; freelance.<br/>
+                <span style="color:var(--cyan);font-size:.7rem">Based in Kathmandu · Works globally</span>
+              </div>
+              <div class="about-open-badge">
+                <div class="open-dot"></div>
+                <div class="open-text">Available</div>
+              </div>
             </div>
-            
-            <!-- Tech Grid -->
-            <div class="mt-16">
-                <h3 class="text-xl font-semibold text-secondary mb-8 text-center">Technology Expertise</h3>
-                <div class="tech-grid">
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-laravel"></i>
-                        </div>
-                        <h4>Laravel</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-react"></i>
-                        </div>
-                        <h4>React</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-android"></i>
-                        </div>
-                        <h4>Android</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-react"></i>
-                        </div>
-                        <h4>React Native</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-docker"></i>
-                        </div>
-                        <h4>Docker</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-aws"></i>
-                        </div>
-                        <h4>AWS</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-jenkins"></i>
-                        </div>
-                        <h4>Jenkins</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <h4>MySQL</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-git-alt"></i>
-                        </div>
-                        <h4>Git</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-php"></i>
-                        </div>
-                        <h4>PHP</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-python"></i>
-                        </div>
-                        <h4>Python</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fab fa-java"></i>
-                        </div>
-                        <h4>Java</h4>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <img src="./assets/files/asterisk.svg" />
-                        </div>
-                        <h4>Asterisk</h4>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="section-header text-3xl font-bold text-secondary inline-block">Work Experience</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">My professional journey as a Laravel developer in Nepal's growing tech industry</p>
-            </div>
-            
-            <div class="max-w-3xl mx-auto">
-                <!-- Experience 1 -->
-                <div class="timeline-item">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-primary">
-                        <div class="flex flex-wrap justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Senior PHP Developer</h3>
-                            <span class="bg-blue-100 text-primary text-sm font-semibold px-3 py-1 rounded-full">Aug 2025 - Present</span>
-                        </div>
-                        <h4 class="text-lg font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-phone text-gray-500 mr-2"></i> Voxcrow Pvt. Ltd.
-                        </h4>
-                        <p class="text-gray-600 mb-4">
-                            Leading fullstack development for enterprise-level call center applications with PHP.
-                        </p>
-                        <ul class="list-disc pl-5 text-gray-600">
-                            <li>Managed telephony infrastructure, including trunk configuration, dialplan setup, and integration with Asterisk AMI APIs and freepbx APIs using PHP.</li>
-                            <li>Architected and implemented a microservice-based system for authentication and billing, supporting company-wide workflows and processes.</li>
-                            <li>Designed scalable database schemas, optimized complex queries, and maintained comprehensive technical documentation, versioning, and changelogs.</li>
-                            <li>Improved overall system performance and code quality, achieving up to a 93% performance increase compared to the previous implementation.</li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- Experience 2 -->
-                <div class="timeline-item">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-primary">
-                        <div class="flex flex-wrap justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Senior Laravel Developer</h3>
-                            <span class="bg-blue-100 text-primary text-sm font-semibold px-3 py-1 rounded-full">Jan 2025 - Aug 2025</span>
-                        </div>
-                        <h4 class="text-lg font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-building text-gray-500 mr-2"></i> Jyrasoft Pvt. Ltd.
-                        </h4>
-                        <p class="text-gray-600 mb-4">
-                            Led fullstack development for enterprise-level applications with Laravel and modern frontend frameworks.
-                        </p>
-                        <ul class="list-disc pl-5 text-gray-600">
-                            <li>Led fullstack development and deployment of YarsaRooms hotel booking platform</li>
-                            <li>Dockerized projects for efficient development and rapid delivery</li>
-                            <li>Designed database architecture for hotels price channel manager</li>
-                            <li>Implemented CI/CD pipelines using Jenkins for automated deployment</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Experience 3 -->
-                <div class="timeline-item">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-blue-400">
-                        <div class="flex flex-wrap justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Laravel Developer</h3>
-                            <span class="bg-blue-100 text-primary text-sm font-semibold px-3 py-1 rounded-full">Mar 2024 - Jul 2024</span>
-                        </div>
-                        <h4 class="text-lg font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-laptop-house text-gray-500 mr-2"></i> Codent Innovations (Remote)
-                        </h4>
-                        <p class="text-gray-600 mb-4">
-                            Contract-based remote role developing educational management systems.
-                        </p>
-                        <ul class="list-disc pl-5 text-gray-600">
-                            <li>Developed, tested and debugged Codent Academy School Management ERP</li>
-                            <li>Implemented features for student, teacher and administrative modules</li>
-                            <li>Integrated mobile app functionality using React Native</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Experience 4 -->
-                <div class="timeline-item">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-blue-300">
-                        <div class="flex flex-wrap justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Senior Full Stack Developer</h3>
-                            <span class="bg-blue-100 text-primary text-sm font-semibold px-3 py-1 rounded-full">Nov 2023 - Jan 2025</span>
-                        </div>
-                        <h4 class="text-lg font-semibold text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-briefcase text-gray-500 mr-2"></i> Beehive Technologies
-                        </h4>
-                        <p class="text-gray-600 mb-4">
-                            Full stack development with Laravel and React for fintech and logistics solutions.
-                        </p>
-                        <ul class="list-disc pl-5 text-gray-600">
-                            <li>Led API development for Mobile Garage location-based tracking system</li>
-                            <li>Developed multi-tenant Loan Management System (SaaS) for SACCOs</li>
-                            <li>Integrated Laravel-based Training Management System with Java MIS</li>
-                            <li>Created Android app components using Java and Android Studio</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<!-- ════════ SKILLS ════════ -->
+<section id="skills">
+  <div class="wrap">
+    <div class="skills-header">
+      <div class="reveal-left">
+        <div class="sec-label"><span class="sec-num">02 /</span> Skills</div>
+        <h2 class="skills-title">Technical<br/><span>Arsenal.</span></h2>
+      </div>
+      <p class="skills-intro reveal-right">
+        A battle-tested stack spanning backend architecture, frontend development, mobile apps, and cloud infrastructure — all aimed at building systems that are fast, reliable, and built to last.
+      </p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal" style="transition-delay:.05s">
+        <div class="skill-card-top">
+          <span class="skill-emoji">⚡</span>
+          <span class="skill-card-num">01</span>
         </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="section-header text-3xl font-bold text-secondary inline-block">Featured Projects</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Highlighted projects showcasing my expertise as a Laravel developer in Nepal</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project 1 -->
-                <div class="project-card bg-white rounded-2xl shadow-md overflow-hidden transition duration-300">
-                    <div class="h-48 bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
-                        <i class="fas fa-hotel text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-secondary">YarsaRooms</h3>
-                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">LIVE</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Hotel Booking platform with real-time availability and payment integration.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-laravel mr-1"></i> Laravel
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-docker mr-1"></i> Docker
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-bootstrap mr-1"></i> Bootstrap
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-js mr-1"></i> Jquery
-                            </span>
-                        </div>
-                        <a href="https://www.yarsarooms.com" target="_blank" class="text-primary font-semibold hover:underline flex items-center">
-                            Visit Project <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Project 2 -->
-                <div class="project-card bg-white rounded-2xl shadow-md overflow-hidden transition duration-300">
-                    <div class="h-48 bg-gradient-to-r from-amber-500 to-orange-600 flex items-center justify-center">
-                        <i class="fas fa-graduation-cap text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Codent Academy</h3>
-                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">LIVE</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Comprehensive School Management ERP for educational institutions.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-laravel mr-1"></i> Laravel
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fas fa-database mr-1"></i> MySQL
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-android mr-1"></i> React Native
-                            </span>
-                        </div>
-                        <a href="https://codentacademy.com" target="_blank" class="text-primary font-semibold hover:underline flex items-center">
-                            Visit Project <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Project 3 -->
-                <div class="project-card bg-white rounded-2xl shadow-md overflow-hidden transition duration-300">
-                    <div class="h-48 bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center">
-                        <i class="fas fa-money-check-alt text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Cooperative Societies</h3>
-                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">LIVE</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Multi-tenant Loan Management System for cooperative societies (SACCOs).</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-laravel mr-1"></i> Laravel
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fas fa-cloud mr-1"></i> SaaS
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fas fa-lock mr-1"></i> RBAC
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-jenkins mr-1"></i> Jenkins
-                            </span>
-                        </div>
-                        <a href="https://shreejanakalyan.coop.np" target="_blank" class="text-primary font-semibold hover:underline flex items-center">
-                            View Details <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="project-card bg-white rounded-2xl shadow-md overflow-hidden transition duration-300">
-                    <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center">
-                        <i class="fas fa-location-dot text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-secondary">Mobile Garage</h3>
-                            <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">LIVE</span>
-                        </div>
-                        <p class="text-gray-600 mb-4">Comprehensive location based garage finding application.</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-laravel mr-1"></i> Laravel
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-android mr-1"></i> Flutter
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fas fa-lock mr-1"></i> RBAC
-                            </span>
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded flex items-center">
-                                <i class="fab fa-docker mr-1"></i> Docker
-                            </span>
-                        </div>
-                        <a href="https://play.google.com/store/apps/details?id=com.beehive.mobilegarage&pcampaignid=web_share&pli=1" target="_blank" class="text-primary font-semibold hover:underline flex items-center">
-                            View Details <i class="fas fa-external-link-alt ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="skill-cat">Backend</div>
+        <div class="skill-name">Laravel & PHP</div>
+        <div class="skill-desc">Expert-level Laravel development. Designing robust backend systems, service layers, event-driven architecture, and REST APIs.</div>
+        <div class="skill-pills">
+          <span class="skill-pill">PHP 8+</span>
+          <span class="skill-pill">Laravel 10</span>
+          <span class="skill-pill">REST API</span>
+          <span class="skill-pill">Eloquent ORM</span>
+          <span class="skill-pill">Queue Jobs</span>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="section-header text-3xl font-bold text-secondary inline-block">Get In Touch</h2>
-                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Looking for a Laravel developer in Nepal? Feel free to reach out!</p>
-            </div>
-            
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-sm">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                        <div>
-                            <h3 class="text-xl font-semibold text-secondary mb-6">Contact Information</h3>
-                            <div class="space-y-6">
-                                <div class="flex items-start">
-                                    <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                                        <i class="fas fa-map-marker-alt text-primary text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">Location</h4>
-                                        <p class="text-gray-600">Maharajgunj, Kathmandu, 44600, Nepal</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-start">
-                                    <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                                        <i class="fas fa-envelope text-primary text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">Email</h4>
-                                        <p class="text-gray-600">ganeshadk786@gmail.com</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-start">
-                                    <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                                        <i class="fas fa-phone text-primary text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">Phone</h4>
-                                        <p class="text-gray-600">+977-9864434149</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-start">
-                                    <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                                        <i class="fab fa-github text-primary text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">GitHub</h4>
-                                        <p class="text-gray-600">github.com/ganesh-421</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-start">
-                                    <div class="bg-blue-100 p-3 rounded-xl mr-4">
-                                        <i class="fas fa-globe text-primary text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-gray-700">Portfolio</h4>
-                                        <p class="text-gray-600">adhikariganesh.com.np</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-xl font-semibold text-secondary mb-6">Send a Message</h3>
-                            <form class="contact-form space-y-4">
-                                <div>
-                                    <input type="text" placeholder="Your Name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
-                                </div>
-                                <div>
-                                    <input type="email" placeholder="Your Email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
-                                </div>
-                                <div>
-                                    <input type="text" placeholder="Subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
-                                </div>
-                                <div>
-                                    <textarea placeholder="Your Message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"></textarea>
-                                </div>
-                                <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 w-full flex items-center justify-center">
-                                    <i class="fas fa-paper-plane mr-2"></i> Send Message
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="skill-card reveal" style="transition-delay:.1s">
+        <div class="skill-card-top">
+          <span class="skill-emoji">⚛️</span>
+          <span class="skill-card-num">02</span>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gradient-to-r from-blue-600 to-indigo-700 py-12">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <h2 class="text-2xl font-bold text-white mb-4">Ganesh Adhikari</h2>
-                <p class="text-blue-100 mb-8 max-w-xl mx-auto">Senior Laravel Developer based in Kathmandu, Nepal specializing in building robust web applications and APIs</p>
-                
-                <div class="flex justify-center space-x-6 mb-8">
-                    <a href="https://github.com/ganesh-421" target="_blank" class="text-white hover:text-blue-200 transition duration-300">
-                        <i class="fab fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-blue-200 transition duration-300">
-                        <i class="fab fa-linkedin-in text-xl"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-blue-200 transition duration-300">
-                        <i class="fab fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-white hover:text-blue-200 transition duration-300">
-                        <i class="fab fa-facebook-f text-xl"></i>
-                    </a>
-                </div>
-                
-                <p class="text-blue-200 text-sm">© 2025 Ganesh Adhikari. All rights reserved.</p>
-                <p class="text-blue-200 text-sm mt-2">Laravel Developer in Nepal | Kathmandu Based Web Developer</p>
-            </div>
+        <div class="skill-cat">Frontend & Mobile</div>
+        <div class="skill-name">React Ecosystem</div>
+        <div class="skill-desc">Building responsive web interfaces with React.js and cross-platform mobile apps with React Native integrated with Laravel backends.</div>
+        <div class="skill-pills">
+          <span class="skill-pill">React.js</span>
+          <span class="skill-pill">React Native</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">REST Integration</span>
         </div>
-    </footer>
-    <script src="./assets/js/script.js"></script>
+      </div>
+      <div class="skill-card reveal" style="transition-delay:.15s">
+        <div class="skill-card-top">
+          <span class="skill-emoji">🐳</span>
+          <span class="skill-card-num">03</span>
+        </div>
+        <div class="skill-cat">DevOps & Cloud</div>
+        <div class="skill-name">Docker & AWS</div>
+        <div class="skill-desc">Containerised deployments, automated CI/CD pipelines with Jenkins, and cloud infrastructure management on AWS.</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Docker</span>
+          <span class="skill-pill">AWS</span>
+          <span class="skill-pill">Jenkins</span>
+          <span class="skill-pill">CI/CD</span>
+          <span class="skill-pill">Linux</span>
+        </div>
+      </div>
+      <div class="skill-card reveal" style="transition-delay:.2s">
+        <div class="skill-card-top">
+          <span class="skill-emoji">🗄</span>
+          <span class="skill-card-num">04</span>
+        </div>
+        <div class="skill-cat">Database</div>
+        <div class="skill-name">SQL & Caching</div>
+        <div class="skill-desc">Complex query optimisation, schema design, indexing strategies, and Redis caching for high-performance data access.</div>
+        <div class="skill-pills">
+          <span class="skill-pill">MySQL</span>
+          <span class="skill-pill">PostgreSQL</span>
+          <span class="skill-pill">Redis</span>
+          <span class="skill-pill">Query Optimisation</span>
+        </div>
+      </div>
+      <div class="skill-card reveal" style="transition-delay:.25s">
+        <div class="skill-card-top">
+          <span class="skill-emoji">🏛</span>
+          <span class="skill-card-num">05</span>
+        </div>
+        <div class="skill-cat">Architecture</div>
+        <div class="skill-name">SaaS & Multi-Tenant</div>
+        <div class="skill-desc">Designing multi-tenant SaaS platforms with role-based access control, tenant isolation, and financial workflow automation.</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Multi-Tenancy</span>
+          <span class="skill-pill">RBAC</span>
+          <span class="skill-pill">System Design</span>
+          <span class="skill-pill">Microservices</span>
+        </div>
+      </div>
+      <div class="skill-card reveal" style="transition-delay:.3s">
+        <div class="skill-card-top">
+          <span class="skill-emoji">🔌</span>
+          <span class="skill-card-num">06</span>
+        </div>
+        <div class="skill-cat">Realtime & Tooling</div>
+        <div class="skill-name">WebSockets & Git</div>
+        <div class="skill-desc">Real-time features with WebSockets, version control workflows, and Git-based collaboration for production codebases.</div>
+        <div class="skill-pills">
+          <span class="skill-pill">WebSockets</span>
+          <span class="skill-pill">Git</span>
+          <span class="skill-pill">Pusher</span>
+          <span class="skill-pill">Broadcasting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ EXPERIENCE ════════ -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-label reveal"><span class="sec-num">03 /</span> Experience</div>
+    <h2 class="exp-title reveal">Professional<br/><span>Journey.</span></h2>
+    <div class="exp-list">
+
+      <div class="exp-item reveal">
+        <div class="exp-left">
+          <div class="exp-date">2025 — Present</div>
+          <div class="exp-company">Jyrasoft Pvt. Ltd.</div>
+          <div class="exp-type">Full-time · Kathmandu</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">Senior Laravel Developer</div>
+          <ul class="exp-bullets">
+            <li>Led development of enterprise-grade hotel booking and channel management systems handling real-time pricing and availability</li>
+            <li>Designed scalable backend architecture enabling instant synchronisation across multiple OTA platforms</li>
+            <li>Implemented Docker-based deployments and Jenkins CI/CD pipelines, cutting release cycle time significantly</li>
+            <li>Collaborated cross-functionally with product, design, and QA to deliver high-performance, reliable applications</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item reveal" style="transition-delay:.1s">
+        <div class="exp-left">
+          <div class="exp-date">2024</div>
+          <div class="exp-company">Codent Innovations</div>
+          <div class="exp-type">Remote · Contract</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">Laravel Developer</div>
+          <ul class="exp-bullets">
+            <li>Developed a full-featured School Management ERP system with complete backend architecture — students, staff, operations, and reporting</li>
+            <li>Integrated backend APIs seamlessly with React Native mobile applications for iOS and Android</li>
+            <li>Improved system performance through query optimisation, caching strategies, and code refactoring</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item reveal" style="transition-delay:.2s">
+        <div class="exp-left">
+          <div class="exp-date">2023 — 2025</div>
+          <div class="exp-company">Beehive Technologies</div>
+          <div class="exp-type">Full-time · Senior Role</div>
+        </div>
+        <div class="exp-right">
+          <div class="exp-role">Senior Full Stack Developer</div>
+          <ul class="exp-bullets">
+            <li>Built a Loan Management SaaS platform with multi-tenant architecture serving multiple financial institutions simultaneously</li>
+            <li>Developed location-based service applications and training management systems from ground up</li>
+            <li>Designed RESTful APIs and managed the full-stack development lifecycle end-to-end</li>
+            <li>Optimised database queries and system performance resulting in measurably faster response times</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PROJECTS ════════ -->
+<section id="projects">
+  <div class="wrap">
+    <div class="projects-header">
+      <div class="reveal-left">
+        <div class="sec-label"><span class="sec-num">04 /</span> Projects</div>
+        <h2 class="projects-title">Key<br/><span>Projects.</span></h2>
+      </div>
+      <p class="projects-sub reveal-right">Production systems across hospitality, education &amp; fintech.</p>
+    </div>
+    <div class="projects-grid">
+
+      <div class="proj-card reveal" style="transition-delay:.05s">
+        <div class="proj-top">
+          <div class="proj-num">01</div>
+          <div class="proj-arrow">↗</div>
+        </div>
+        <div class="proj-domain">Hospitality · Booking</div>
+        <div class="proj-name">YarsaRooms</div>
+        <p class="proj-desc">A sophisticated hotel booking platform with real-time room availability and dynamic pricing systems, built to scale across multiple properties and OTA channels.</p>
+        <ul class="proj-features">
+          <li>Real-time room availability engine with instant sync</li>
+          <li>Dynamic pricing & channel management integration</li>
+          <li>Scalable booking management with automated workflows</li>
+          <li>Multi-property support with centralised dashboard</li>
+        </ul>
+        <div class="proj-tech">
+          <span class="proj-tech-tag">Laravel</span>
+          <span class="proj-tech-tag">WebSockets</span>
+          <span class="proj-tech-tag">Redis</span>
+          <span class="proj-tech-tag">Docker</span>
+          <span class="proj-tech-tag">MySQL</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.1s">
+        <div class="proj-top">
+          <div class="proj-num">02</div>
+          <div class="proj-arrow">↗</div>
+        </div>
+        <div class="proj-domain">Education · ERP</div>
+        <div class="proj-name">Codent Academy ERP</div>
+        <p class="proj-desc">A comprehensive school management system covering the complete student lifecycle — from enrollment and attendance to grades, staff management, and financial operations.</p>
+        <ul class="proj-features">
+          <li>Full student, staff & operations management</li>
+          <li>React Native mobile app with real-time sync</li>
+          <li>Automated reporting and performance analytics</li>
+          <li>Role-based access for admins, teachers & students</li>
+        </ul>
+        <div class="proj-tech">
+          <span class="proj-tech-tag">Laravel</span>
+          <span class="proj-tech-tag">React Native</span>
+          <span class="proj-tech-tag">PostgreSQL</span>
+          <span class="proj-tech-tag">REST API</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.15s">
+        <div class="proj-top">
+          <div class="proj-num">03</div>
+          <div class="proj-arrow">↗</div>
+        </div>
+        <div class="proj-domain">Fintech · SaaS</div>
+        <div class="proj-name">Loan Management SaaS</div>
+        <p class="proj-desc">A multi-tenant SaaS platform engineered for financial institutions — managing loans, repayments, and financial workflows with strict role-based access and tenant isolation.</p>
+        <ul class="proj-features">
+          <li>Multi-tenant architecture with full data isolation</li>
+          <li>Automated loan lifecycle & repayment tracking</li>
+          <li>Role-based access control for compliance</li>
+          <li>Financial reporting & workflow automation engine</li>
+        </ul>
+        <div class="proj-tech">
+          <span class="proj-tech-tag">Laravel</span>
+          <span class="proj-tech-tag">Multi-Tenancy</span>
+          <span class="proj-tech-tag">MySQL</span>
+          <span class="proj-tech-tag">Redis</span>
+          <span class="proj-tech-tag">AWS</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.2s">
+        <div class="proj-top">
+          <div class="proj-num">04</div>
+          <div class="proj-arrow">↗</div>
+        </div>
+        <div class="proj-domain">Location · Services</div>
+        <div class="proj-name">Mobile Garage App</div>
+        <p class="proj-desc">A location-aware mobile application connecting vehicle owners to nearby garage services with real-time availability, live tracking, and instant communication features.</p>
+        <ul class="proj-features">
+          <li>Location-based garage discovery with maps</li>
+          <li>Real-time service request & status tracking</li>
+          <li>WebSocket-powered live mechanic interaction</li>
+          <li>Cross-platform iOS & Android deployment</li>
+        </ul>
+        <div class="proj-tech">
+          <span class="proj-tech-tag">Laravel</span>
+          <span class="proj-tech-tag">React Native</span>
+          <span class="proj-tech-tag">WebSockets</span>
+          <span class="proj-tech-tag">GPS API</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════ EDUCATION ════════ -->
+<section id="education">
+  <div class="wrap">
+    <div class="edu-inner">
+      <div class="reveal-left">
+        <div class="sec-label"><span class="sec-num">05 /</span> Education</div>
+        <h2 class="edu-title">Academic<br/><span>Foundation.</span></h2>
+        <div class="edu-card">
+          <div class="edu-degree">BSc. Computer Science & Information Technology</div>
+          <div class="edu-uni">Tribhuvan University</div>
+          <div class="edu-years">2018 – 2023 · Kathmandu, Nepal</div>
+          <p class="edu-quote">
+            A rigorous 4-year programme covering algorithms, software engineering, databases, networking, and systems design — forming the technical backbone behind every system I build.
+          </p>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="edu-visual">
+          <div class="edu-vis-title">Core Proficiency</div>
+          <div class="edu-vis-sub">Self-assessed skill levels across primary technologies</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item">
+              <div class="skill-bar-head">
+                <span class="skill-bar-name">Laravel / PHP</span>
+                <span class="skill-bar-pct">95%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style="--pct:95%"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-head">
+                <span class="skill-bar-name">System Architecture</span>
+                <span class="skill-bar-pct">90%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style="--pct:90%"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-head">
+                <span class="skill-bar-name">React.js / React Native</span>
+                <span class="skill-bar-pct">82%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style="--pct:82%"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-head">
+                <span class="skill-bar-name">DevOps (Docker / AWS)</span>
+                <span class="skill-bar-pct">85%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style="--pct:85%"></div>
+              </div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="skill-bar-head">
+                <span class="skill-bar-name">Database Optimisation</span>
+                <span class="skill-bar-pct">88%</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style="--pct:88%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CONTACT ════════ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-inner">
+      <div class="reveal-left">
+        <div class="sec-label"><span class="sec-num">06 /</span> Contact</div>
+        <h2 class="contact-title">Let's Build<br/><span>Something</span><br/>Great.</h2>
+        <p class="contact-desc">
+          Whether you're looking to hire a senior backend engineer, need a scalable system built, or want to discuss a potential collaboration — I'd love to hear from you.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:ganeshadk786@gmail.com" class="contact-link">
+            <div class="contact-link-left">
+              <div class="contact-link-icon">✉</div>
+              <div>
+                <div class="contact-link-label">Email</div>
+                <div class="contact-link-val">ganeshadk786@gmail.com</div>
+              </div>
+            </div>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+          <a href="https://adhikariganesh.com.np" target="_blank" class="contact-link">
+            <div class="contact-link-left">
+              <div class="contact-link-icon">🌐</div>
+              <div>
+                <div class="contact-link-label">Website</div>
+                <div class="contact-link-val">adhikariganesh.com.np</div>
+              </div>
+            </div>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+          <a href="https://linkedin.com/in/ganesh-adhikari-li" target="_blank" class="contact-link">
+            <div class="contact-link-left">
+              <div class="contact-link-icon">in</div>
+              <div>
+                <div class="contact-link-label">LinkedIn</div>
+                <div class="contact-link-val">linkedin.com/in/ganesh-adhikari-li</div>
+              </div>
+            </div>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+          <a href="https://github.com/ganesh-adhk" target="_blank" class="contact-link">
+            <div class="contact-link-left">
+              <div class="contact-link-icon">⌥</div>
+              <div>
+                <div class="contact-link-label">GitHub</div>
+                <div class="contact-link-val">github.com/ganesh-adhk</div>
+              </div>
+            </div>
+            <span class="contact-link-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="about-card">
+          <div class="about-card-title">Send a Message</div>
+          <div class="contact-form">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" placeholder="e.g. Jane Smith"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="jane@company.com"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Opportunity Type</label>
+              <input type="text" class="form-input" placeholder="Full-time / Remote / Contract"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" placeholder="Tell me about your project or role…"></textarea>
+            </div>
+            <button class="form-submit">✉ Send Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#hero" class="footer-logo">Ganesh <span>Adhikari</span></a>
+  <ul class="footer-nav">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 Ganesh Adhikari · Kathmandu, Nepal · All rights reserved</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./assets/js/script.js" ></script>
 </body>
 </html>
