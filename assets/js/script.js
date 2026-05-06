@@ -59,7 +59,9 @@
     document.querySelectorAll('.skill-bars').forEach(el=>barObs.observe(el));
 
     /* ─────────────────────────────────── *
-     * MAIN THREE.JS SCENE (Background)   *
+     * MAIN THREE.JS — Web3 Backdrop      *
+     * Hex-lattice "blockchain" mesh,     *
+     * dim & sparse so text stays legible *
      * ─────────────────────────────────── */
     const canvas=document.getElementById('three-canvas');
     const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
@@ -71,6 +73,9 @@
     const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,1000);
     camera.position.z=30;
 
+    // Web3 palette
+    const C_CYAN=0x00f5ff, C_VIOLET=0x8b5cf6, C_MAGENTA=0xff2e8a;
+
     // Mouse
     let mouseX=0,mouseY=0;
     document.addEventListener('mousemove',e=>{
@@ -78,95 +83,113 @@
       mouseY=-(e.clientY/window.innerHeight-.5)*2;
     });
 
-    /* PARTICLE FIELD */
-    const PARTICLES=4000;
+    /* DRIFTING PARTICLES — sparse, tri-color, additive glow */
+    const PARTICLES=1400;
     const pGeom=new THREE.BufferGeometry();
     const pPos=new Float32Array(PARTICLES*3);
+    const pCol=new Float32Array(PARTICLES*3);
     const pVel=new Float32Array(PARTICLES*3);
     const pOrig=new Float32Array(PARTICLES*3);
     for(let i=0;i<PARTICLES;i++){
       const i3=i*3;
-      const x=(Math.random()-.5)*120;
-      const y=(Math.random()-.5)*80;
-      const z=(Math.random()-.5)*60;
+      const x=(Math.random()-.5)*140;
+      const y=(Math.random()-.5)*90;
+      const z=(Math.random()-.5)*70-5;
       pPos[i3]=x; pPos[i3+1]=y; pPos[i3+2]=z;
       pOrig[i3]=x; pOrig[i3+1]=y; pOrig[i3+2]=z;
-      pVel[i3]=(Math.random()-.5)*.02;
-      pVel[i3+1]=(Math.random()-.5)*.015;
-      pVel[i3+2]=(Math.random()-.5)*.01;
+      pVel[i3]=(Math.random()-.5)*.018;
+      pVel[i3+1]=(Math.random()-.5)*.013;
+      pVel[i3+2]=(Math.random()-.5)*.009;
+      const r=Math.random();
+      if(r<.55){pCol[i3]=0;pCol[i3+1]=.96;pCol[i3+2]=1.0}        // cyan
+      else if(r<.85){pCol[i3]=.55;pCol[i3+1]=.36;pCol[i3+2]=.96} // violet
+      else{pCol[i3]=1.0;pCol[i3+1]=.18;pCol[i3+2]=.54}           // magenta
     }
     pGeom.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+    pGeom.setAttribute('color',new THREE.BufferAttribute(pCol,3));
     const pMat=new THREE.PointsMaterial({
-      size:.18,
-      color:0x00d4ff,
-      transparent:true,
-      opacity:.55,
+      size:.16,vertexColors:true,
+      transparent:true,opacity:.4,
+      blending:THREE.AdditiveBlending,depthWrite:false,
       sizeAttenuation:true,
     });
     const particles=new THREE.Points(pGeom,pMat);
     scene.add(particles);
 
-    /* NEURAL NETWORK LINES */
-    const lineCount=120;
-    const lineGeo=new THREE.BufferGeometry();
-    const linePos=new Float32Array(lineCount*2*3);
-    for(let i=0;i<lineCount;i++){
-      const i6=i*6;
-      const ax=(Math.random()-.5)*100;
-      const ay=(Math.random()-.5)*70;
-      const az=(Math.random()-.5)*50;
-      const bx=ax+(Math.random()-.5)*20;
-      const by=ay+(Math.random()-.5)*20;
-      const bz=az+(Math.random()-.5)*10;
-      linePos[i6]=ax; linePos[i6+1]=ay; linePos[i6+2]=az;
-      linePos[i6+3]=bx; linePos[i6+4]=by; linePos[i6+5]=bz;
-    }
-    lineGeo.setAttribute('position',new THREE.BufferAttribute(linePos,3));
-    const lineMat=new THREE.LineBasicMaterial({color:0x003344,transparent:true,opacity:.25});
-    const lines=new THREE.LineSegments(lineGeo,lineMat);
-    scene.add(lines);
+    /* HEX-LATTICE BLOCKCHAIN MESH — connected nodes far back */
+    const lattice=(()=>{
+      const cols=8,rows=5,step=18;
+      const nodes=[];
+      for(let r=0;r<rows;r++){
+        for(let c=0;c<cols;c++){
+          const x=(c-cols/2+(r%2)*.5)*step;
+          const y=(r-rows/2)*step*.866;
+          const z=-34+(Math.random()-.5)*10;
+          nodes.push(new THREE.Vector3(x,y,z));
+        }
+      }
+      const linePos=[];
+      for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+          if(nodes[i].distanceTo(nodes[j])<step*1.15){
+            linePos.push(nodes[i].x,nodes[i].y,nodes[i].z,
+                         nodes[j].x,nodes[j].y,nodes[j].z);
+          }
+        }
+      }
+      const lg=new THREE.BufferGeometry();
+      lg.setAttribute('position',new THREE.Float32BufferAttribute(linePos,3));
+      const lm=new THREE.LineBasicMaterial({
+        color:C_VIOLET,transparent:true,opacity:.18,
+        blending:THREE.AdditiveBlending,depthWrite:false,
+      });
+      return{lines:new THREE.LineSegments(lg,lm),nodes};
+    })();
+    scene.add(lattice.lines);
 
-    /* FLOATING GEOMETRIC RINGS */
-    function makeRing(radius,tube,segments,color,ox,oy,oz){
-      const g=new THREE.TorusGeometry(radius,tube,8,segments);
-      const m=new THREE.MeshBasicMaterial({color,wireframe:true,transparent:true,opacity:.08});
+    // Glowing nodes at lattice points
+    const nodeGeom=new THREE.BufferGeometry();
+    const nodePos=new Float32Array(lattice.nodes.length*3);
+    const nodeCol=new Float32Array(lattice.nodes.length*3);
+    lattice.nodes.forEach((n,i)=>{
+      nodePos[i*3]=n.x; nodePos[i*3+1]=n.y; nodePos[i*3+2]=n.z;
+      const r=Math.random();
+      if(r<.5){nodeCol[i*3]=0;nodeCol[i*3+1]=.96;nodeCol[i*3+2]=1.0}
+      else{nodeCol[i*3]=.55;nodeCol[i*3+1]=.36;nodeCol[i*3+2]=.96}
+    });
+    nodeGeom.setAttribute('position',new THREE.BufferAttribute(nodePos,3));
+    nodeGeom.setAttribute('color',new THREE.BufferAttribute(nodeCol,3));
+    const nodeMesh=new THREE.Points(nodeGeom,new THREE.PointsMaterial({
+      size:.55,vertexColors:true,transparent:true,opacity:.7,
+      blending:THREE.AdditiveBlending,depthWrite:false,
+    }));
+    scene.add(nodeMesh);
+
+    /* ORBIT RINGS — minimal, web3 hex feel */
+    function makeRing(radius,color,ox,oy,oz,opacity){
+      const g=new THREE.TorusGeometry(radius,.05,6,64);
+      const m=new THREE.MeshBasicMaterial({color,wireframe:true,transparent:true,opacity});
       const mesh=new THREE.Mesh(g,m);
       mesh.position.set(ox,oy,oz);
       scene.add(mesh);
       return mesh;
     }
-    const ring1=makeRing(18,0.06,80,0x00d4ff, 0, 0, -20);
-    const ring2=makeRing(12,0.04,64,0x00a8cc, 10,-5,-15);
-    const ring3=makeRing(8, 0.03,48,0xff6b35,-8, 6,-10);
+    const ring1=makeRing(20,C_CYAN,    0, 0,-20,.1);
+    const ring2=makeRing(13,C_VIOLET,  9,-5,-14,.1);
+    const ring3=makeRing(8, C_MAGENTA,-9, 6, -8,.1);
 
-    /* CENTRAL ICOSAHEDRON */
-    const icoGeo=new THREE.IcosahedronGeometry(5,1);
-    const icoMat=new THREE.MeshBasicMaterial({color:0x00d4ff,wireframe:true,transparent:true,opacity:.06});
-    const icosahedron=new THREE.Mesh(icoGeo,icoMat);
-    icosahedron.position.set(16,-4,0);
-    scene.add(icosahedron);
-
-    /* SMALL FLOATING CUBES */
-    const cubes=[];
-    for(let i=0;i<20;i++){
-      const s=Math.random()*.6+.1;
-      const g=new THREE.BoxGeometry(s,s,s);
-      const m=new THREE.MeshBasicMaterial({
-        color:Math.random()>.5?0x00d4ff:0xff6b35,
-        wireframe:true,transparent:true,opacity:.12+Math.random()*.1
-      });
-      const c=new THREE.Mesh(g,m);
-      c.position.set((Math.random()-.5)*80,(Math.random()-.5)*60,(Math.random()-.5)*30);
-      c.userData={
-        rx:(Math.random()-.5)*.02,
-        ry:(Math.random()-.5)*.02,
-        rz:(Math.random()-.5)*.015,
-        fy:(Math.random()-.5)*.008,
-        oy:c.position.y
-      };
-      scene.add(c);
-      cubes.push(c);
-    }
+    /* CENTRAL "BLOCK" — wireframe icosahedron with violet halo */
+    const blockGroup=new THREE.Group();
+    const icoMat=new THREE.MeshBasicMaterial({color:C_CYAN,wireframe:true,transparent:true,opacity:.08});
+    const icosahedron=new THREE.Mesh(new THREE.IcosahedronGeometry(5.5,1),icoMat);
+    blockGroup.add(icosahedron);
+    const halo=new THREE.Mesh(
+      new THREE.IcosahedronGeometry(7.4,1),
+      new THREE.MeshBasicMaterial({color:C_VIOLET,wireframe:true,transparent:true,opacity:.05})
+    );
+    blockGroup.add(halo);
+    blockGroup.position.set(17,-4,-2);
+    scene.add(blockGroup);
 
     /* ANIMATION LOOP */
     let time=0;
@@ -177,52 +200,40 @@
       // Drift particles
       for(let i=0;i<PARTICLES;i++){
         const i3=i*3;
-        pPos[i3]  +=pVel[i3];
+        pPos[i3]+=pVel[i3];
         pPos[i3+1]+=pVel[i3+1];
         pPos[i3+2]+=pVel[i3+2];
-        // Bounce back gently
-        if(Math.abs(pPos[i3]-pOrig[i3])>8){pVel[i3]*=-1}
-        if(Math.abs(pPos[i3+1]-pOrig[i3+1])>6){pVel[i3+1]*=-1}
-        if(Math.abs(pPos[i3+2]-pOrig[i3+2])>4){pVel[i3+2]*=-1}
-        // Mouse influence
+        if(Math.abs(pPos[i3]-pOrig[i3])>9){pVel[i3]*=-1}
+        if(Math.abs(pPos[i3+1]-pOrig[i3+1])>7){pVel[i3+1]*=-1}
+        if(Math.abs(pPos[i3+2]-pOrig[i3+2])>5){pVel[i3+2]*=-1}
         const mx=pPos[i3]-mouseX*30;
         const my=pPos[i3+1]-mouseY*20;
-        const dist=Math.sqrt(mx*mx+my*my);
-        if(dist<15){
-          pVel[i3]+=mx/dist*.004;
-          pVel[i3+1]+=my/dist*.004;
+        const d=Math.sqrt(mx*mx+my*my);
+        if(d<15){
+          pVel[i3]+=mx/d*.0035;
+          pVel[i3+1]+=my/d*.0035;
         }
       }
       pGeom.attributes.position.needsUpdate=true;
 
-      // Rotate rings
       ring1.rotation.x=Math.sin(time*.3)*.4;
-      ring1.rotation.y=time*.2;
-      ring2.rotation.x=time*.15;
+      ring1.rotation.y=time*.18;
+      ring2.rotation.x=time*.12;
       ring2.rotation.z=Math.cos(time*.25)*.3;
-      ring3.rotation.y=time*.3;
-      ring3.rotation.z=time*.2;
+      ring3.rotation.y=time*.28;
+      ring3.rotation.z=time*.18;
 
-      // Icosahedron
-      icosahedron.rotation.x=time*.15;
-      icosahedron.rotation.y=time*.2;
+      blockGroup.rotation.x=time*.13;
+      blockGroup.rotation.y=time*.18;
+      halo.rotation.x=-time*.18;
 
-      // Floating cubes
-      cubes.forEach(c=>{
-        c.rotation.x+=c.userData.rx;
-        c.rotation.y+=c.userData.ry;
-        c.rotation.z+=c.userData.rz;
-        c.position.y=c.userData.oy+Math.sin(time+c.userData.oy)*.5;
-      });
-
-      // Camera subtle movement
       camera.position.x+=(mouseX*4-camera.position.x)*.04;
       camera.position.y+=(mouseY*3-camera.position.y)*.04;
       camera.lookAt(scene.position);
 
-      // Lines subtle rotation
-      lines.rotation.y=time*.03;
-      particles.rotation.y=time*.004;
+      lattice.lines.rotation.z=time*.02;
+      nodeMesh.rotation.z=time*.02;
+      particles.rotation.y=time*.003;
 
       renderer.render(scene,camera);
     }
