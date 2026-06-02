@@ -36,55 +36,298 @@
   --a11y-font-scale: 1.06;
 }
 
-/* ---------- Reduced-noise mode: global DOM adjustments --------------------- */
+/* ============================================================================
+   Reduced-noise / Calm mode for this portfolio.
 
+   Strategy: re-skin the entire dark, cyan-on-black theme into a clean,
+   high-contrast LIGHT reading view. We do this by overriding the site's
+   own CSS custom properties at the document root — every component that
+   uses var(--bg), var(--cyan), var(--white), etc. automatically retones,
+   so we don't have to chase every single rule.
+
+   On top of that, we explicitly:
+     - hide pure-decoration layers (three.js canvas, grain, custom cursor)
+     - restore the native OS cursor
+     - flatten gradients, glows, and box-shadows to plain borders
+     - shut off all decorative animations
+   ========================================================================== */
+
+/* 1. Theme token overrides — the heart of calm mode. ----------------------- */
+:root[data-a11y-mode="reduced"] {
+  /* Surfaces */
+  --bg:        #ffffff;          /* page background */
+  --bg1:       #f7f9fc;          /* card / panel background */
+  --bg2:       #eef2f7;          /* hover / sunken surface */
+
+  /* Accents — kept as accent, but darkened to meet WCAG AA on white */
+  --cyan:      #006d8f;          /* primary accent (was neon #00d4ff) */
+  --cyan2:    #00566f;
+  --cyan-dim: rgba(0, 109, 143, 0.08);
+  --orange:   #b8431a;           /* secondary accent, also darkened */
+  --orange-dim: rgba(184, 67, 26, 0.08);
+
+  /* Text */
+  --white:    #0e1116;           /* primary body text (was near-white) */
+  --text-mid: #2c3340;           /* secondary text */
+  --text-dim: #5a6573;           /* meta / labels */
+
+  /* Borders / dividers */
+  --grey:     #d6dce4;
+  --grey2:    #e4e9f0;
+}
+
+/* 2. Base body — calm typography. ------------------------------------------ */
 :root[data-a11y-mode="reduced"] body {
-  background: var(--a11y-bg-color, #fafbfd) !important;
-  color: var(--a11y-text-color, #0b0f1a) !important;
+  background: #ffffff !important;
+  color: #0e1116 !important;
+  cursor: auto !important;                  /* style.css set cursor:none */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+               "Helvetica Neue", Arial, sans-serif !important;
+  letter-spacing: 0.005em;
+  line-height: 1.7;
 }
 
-/* Strip noisy background imagery so text wins the visual hierarchy. */
-:root[data-a11y-mode="reduced"] body,
-:root[data-a11y-mode="reduced"] [data-accessible] {
-  background-image: none !important;
+:root[data-a11y-mode="reduced"] ::selection {
+  background: #006d8f;
+  color: #ffffff;
 }
 
-/* Calm down decorative gradients without nuking layout-critical ones. */
-:root[data-a11y-mode="reduced"] [data-accessible="surface"] {
-  background: var(--a11y-bg-color, #fafbfd) !important;
+/* 3. Kill the ambient noise layers entirely. ------------------------------- */
+:root[data-a11y-mode="reduced"] #three-canvas,
+:root[data-a11y-mode="reduced"] #grain,
+:root[data-a11y-mode="reduced"] #cur,
+:root[data-a11y-mode="reduced"] #cur-ring,
+:root[data-a11y-mode="reduced"] #hero-canvas-mini {
+  display: none !important;
+}
+
+/* Loader can stay visible briefly, but in light tones. */
+:root[data-a11y-mode="reduced"] #loader {
+  background: #ffffff !important;
+  color: #0e1116 !important;
+}
+
+/* 4. Flatten the navbar — was rgba dark glass + cyan tint. ----------------- */
+:root[data-a11y-mode="reduced"] #navbar {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid #e4e9f0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 5. Section + card surfaces — solid light cards with crisp borders. ------- */
+:root[data-a11y-mode="reduced"] section,
+:root[data-a11y-mode="reduced"] #techstrip,
+:root[data-a11y-mode="reduced"] footer {
+  background: #ffffff !important;
+}
+
+:root[data-a11y-mode="reduced"] .about-card,
+:root[data-a11y-mode="reduced"] .skill-card,
+:root[data-a11y-mode="reduced"] .proj-card,
+:root[data-a11y-mode="reduced"] .edu-card,
+:root[data-a11y-mode="reduced"] .edu-visual,
+:root[data-a11y-mode="reduced"] .competency,
+:root[data-a11y-mode="reduced"] .hero-3d-frame,
+:root[data-a11y-mode="reduced"] .hero-badge,
+:root[data-a11y-mode="reduced"] .about-open,
+:root[data-a11y-mode="reduced"] .about-location,
+:root[data-a11y-mode="reduced"] .exp-item,
+:root[data-a11y-mode="reduced"] .contact-link {
+  background: #f7f9fc !important;
+  border: 1px solid #d6dce4 !important;
   box-shadow: none !important;
-  border: 1px solid #d9deea !important;
+  backdrop-filter: none !important;
 }
 
-/* Text blocks: more spacing, slightly larger, no tight tracking. */
-:root[data-a11y-mode="reduced"] [data-accessible="text"],
-:root[data-a11y-mode="reduced"] [data-accessible] p,
-:root[data-a11y-mode="reduced"] [data-accessible] li {
-  line-height: var(--a11y-line-height, 1.7);
-  letter-spacing: var(--a11y-letter-spacing, 0.01em);
-  font-size: calc(1em * var(--a11y-font-scale, 1.06));
-  color: var(--a11y-text-color, #0b0f1a);
+/* The hero 3D frame is now empty; collapse it so it doesn't leave a hole. */
+:root[data-a11y-mode="reduced"] .hero-3d-frame {
+  display: none !important;
+}
+:root[data-a11y-mode="reduced"] .hero-inner {
+  grid-template-columns: 1fr !important;
 }
 
-/* The Three.js canvas is treated as ambient noise: dim it, soften it,
-   stop it competing with foreground content. JS may also tell registered
-   scenes to throttle particles/shaders for real performance wins. */
-:root[data-a11y-mode="reduced"] [data-accessible="three-canvas"],
-:root[data-a11y-mode="reduced"] #three-canvas {
-  filter: brightness(0.55) saturate(0.7) contrast(0.95);
-  opacity: 0.75;
-  transition: filter var(--a11y-transition), opacity var(--a11y-transition);
+/* 6. Hide ::before / ::after corner accents + cyan glow strokes. ----------- */
+:root[data-a11y-mode="reduced"] .about-card::before,
+:root[data-a11y-mode="reduced"] .skill-card::after,
+:root[data-a11y-mode="reduced"] .exp-item::before,
+:root[data-a11y-mode="reduced"] .hero-3d-frame::before,
+:root[data-a11y-mode="reduced"] .hero-3d-frame::after,
+:root[data-a11y-mode="reduced"] .sec-label::before {
+  display: none !important;
 }
 
-/* Disable purely decorative motion globally in reduced mode. Components
-   keep functional animation (e.g., focus rings, prompt slide-in). */
-:root[data-a11y-mode="reduced"] [data-accessible-motion="decorative"] {
-  animation: none !important;
-  transition: none !important;
+/* 7. Buttons — keep their meaning, lose the neon. -------------------------- */
+:root[data-a11y-mode="reduced"] .btn {
+  cursor: pointer !important;
+  border-radius: 6px;
+}
+:root[data-a11y-mode="reduced"] .btn-primary {
+  background: #006d8f !important;
+  color: #ffffff !important;
+  border: 1px solid #006d8f !important;
+}
+:root[data-a11y-mode="reduced"] .btn-primary:hover {
+  background: #00566f !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+:root[data-a11y-mode="reduced"] .btn-outline {
+  background: #ffffff !important;
+  color: #006d8f !important;
+  border: 1px solid #006d8f !important;
+}
+:root[data-a11y-mode="reduced"] .btn-outline:hover {
+  background: #eaf6fb !important;
   transform: none !important;
 }
 
-/* Honor the OS-level preference too. */
+/* 8. Hero title — was three lines with gradient + cyan middle. ------------- */
+:root[data-a11y-mode="reduced"] .hero-title,
+:root[data-a11y-mode="reduced"] .hero-title .tinner,
+:root[data-a11y-mode="reduced"] .tline:nth-child(1) .tinner,
+:root[data-a11y-mode="reduced"] .tline:nth-child(2) .tinner,
+:root[data-a11y-mode="reduced"] .tline:nth-child(3) .tinner {
+  color: #0e1116 !important;
+  background: none !important;
+  -webkit-text-fill-color: #0e1116 !important;
+  text-shadow: none !important;
+}
+
+/* 9. Pills / chips — readable on white. ------------------------------------ */
+:root[data-a11y-mode="reduced"] .skill-pill,
+:root[data-a11y-mode="reduced"] .proj-tech-tag {
+  background: #eef2f7 !important;
+  border: 1px solid #d6dce4 !important;
+  color: #2c3340 !important;
+}
+:root[data-a11y-mode="reduced"] .skill-card:hover .skill-pill {
+  border-color: #006d8f !important;
+  color: #006d8f !important;
+}
+
+/* 10. Form inputs — visible borders on white. ------------------------------ */
+:root[data-a11y-mode="reduced"] .form-input,
+:root[data-a11y-mode="reduced"] .form-textarea {
+  background: #ffffff !important;
+  border: 1px solid #c2cadb !important;
+  color: #0e1116 !important;
+}
+:root[data-a11y-mode="reduced"] .form-input::placeholder,
+:root[data-a11y-mode="reduced"] .form-textarea::placeholder {
+  color: #7a8597 !important;
+}
+:root[data-a11y-mode="reduced"] .form-submit {
+  background: #006d8f !important;
+  color: #ffffff !important;
+  border: 1px solid #006d8f !important;
+}
+
+/* 11. Skill bars — solid, no glow. ----------------------------------------- */
+:root[data-a11y-mode="reduced"] .skill-bar-track {
+  background: #e4e9f0 !important;
+}
+:root[data-a11y-mode="reduced"] .skill-bar-fill {
+  background: #006d8f !important;
+  box-shadow: none !important;
+}
+
+/* 12. Tech-strip — stop the marquee animation, show it as a static row. ---- */
+:root[data-a11y-mode="reduced"] .strip-track {
+  animation: none !important;
+  transform: none !important;
+  flex-wrap: wrap !important;
+  justify-content: center;
+  gap: 0.5rem 1.25rem !important;
+}
+:root[data-a11y-mode="reduced"] .strip-item {
+  color: #2c3340 !important;
+}
+:root[data-a11y-mode="reduced"] .strip-dot {
+  background: #006d8f !important;
+}
+
+/* 13. Scrollbar — light themed. -------------------------------------------- */
+:root[data-a11y-mode="reduced"] ::-webkit-scrollbar-track {
+  background: #f7f9fc !important;
+}
+:root[data-a11y-mode="reduced"] ::-webkit-scrollbar-thumb {
+  background: #b9c2d0 !important;
+}
+
+/* 14. Kill ALL decorative animation and motion globally in calm mode. ------ */
+:root[data-a11y-mode="reduced"] *,
+:root[data-a11y-mode="reduced"] *::before,
+:root[data-a11y-mode="reduced"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* 15. Restore content layers that the dark theme animated INTO view.
+   In the dark theme, .reveal / .tinner / .hero-* start invisible and
+   animate to opacity 1. With animations killed (rule 14) they'd stay
+   stuck at opacity 0. Force them visible. */
+:root[data-a11y-mode="reduced"] .reveal,
+:root[data-a11y-mode="reduced"] .reveal-left,
+:root[data-a11y-mode="reduced"] .reveal-right,
+:root[data-a11y-mode="reduced"] .hero-badge,
+:root[data-a11y-mode="reduced"] .hero-title,
+:root[data-a11y-mode="reduced"] .hero-title .tinner,
+:root[data-a11y-mode="reduced"] .hero-sub,
+:root[data-a11y-mode="reduced"] .hero-meta,
+:root[data-a11y-mode="reduced"] .hero-ctas,
+:root[data-a11y-mode="reduced"] .hero-right {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* 16. Optional text-block tweaks for anything tagged data-accessible. ------ */
+:root[data-a11y-mode="reduced"] [data-accessible="text"],
+:root[data-a11y-mode="reduced"] [data-accessible] p,
+:root[data-a11y-mode="reduced"] [data-accessible] li {
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+  color: #0e1116;
+}
+
+/* 17. Exit pill — only rendered & visible while calm mode is active. ------- */
+.a11y-exit {
+  display: none;
+}
+:root[data-a11y-mode="reduced"] .a11y-exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 2147482000;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0e1116;
+  border: 1px solid #c2cadb;
+  box-shadow: 0 6px 18px rgba(11, 15, 26, 0.12);
+  font: 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Arial, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+:root[data-a11y-mode="reduced"] .a11y-exit:hover {
+  border-color: #006d8f;
+  color: #006d8f;
+}
+:root[data-a11y-mode="reduced"] .a11y-exit::before {
+  content: "📖";
+  font-size: 14px;
+}
+:root[data-a11y-mode="reduced"] .a11y-exit:focus-visible {
+  outline: var(--a11y-focus-ring);
+  outline-offset: 2px;
+}
+
+/* 18. Honor OS-level reduced-motion regardless of calm mode. --------------- */
 @media (prefers-reduced-motion: reduce) {
   :root [data-accessible-motion="decorative"] {
     animation: none !important;

@@ -90,6 +90,31 @@
   })();
 
   // -------------------------------------------------------------------------
+  // ExitPill — small floating "Exit Reading Mode" button shown only while
+  // calm mode is active, so users have a one-click way back to the full
+  // experience. CSS handles its visibility via [data-a11y-mode="reduced"].
+  // -------------------------------------------------------------------------
+  const ExitPill = (() => {
+    let btn = null;
+    function ensure() {
+      if (btn) return btn;
+      btn = document.createElement('button');
+      btn.className = 'a11y-exit';
+      btn.type = 'button';
+      btn.textContent = 'Exit Reading Mode';
+      btn.setAttribute('aria-label', 'Exit Reading Mode and return to the full site');
+      btn.addEventListener('click', () => ModeApplicator.apply(false));
+      document.body.appendChild(btn);
+      return btn;
+    }
+    function sync(enabled) {
+      // Mount lazily; CSS handles show/hide via the root attribute.
+      if (enabled) ensure();
+    }
+    return { sync };
+  })();
+
+  // -------------------------------------------------------------------------
   // ModeApplicator — single source of truth for reduced-noise on/off.
   // -------------------------------------------------------------------------
   const ModeApplicator = (() => {
@@ -124,6 +149,7 @@
       // Keep legacy class in sync for older portfolio CSS.
       document.body.classList.toggle('a11y-reduce-bg', enabled);
       StateManager.setReduced(enabled);
+      ExitPill.sync(enabled);
       notify();
     }
 
@@ -382,16 +408,16 @@
         <button class="a11y-prompt__close" type="button"
                 aria-label="Dismiss accessibility suggestion">&times;</button>
         <p id="a11y-prompt-title" class="a11y-prompt__title">
-          Hard to focus on the content?
+          Find the animations distracting?
         </p>
         <p id="a11y-prompt-body" class="a11y-prompt__body">
-          Switch to a calmer view — softer background, more spacing,
-          and reduced motion. You can turn it off anytime.
+          Switch to Reading Mode — clean light theme, no motion,
+          no background effects. Just the content, easy to read.
         </p>
         <div class="a11y-prompt__actions">
           <button class="a11y-prompt__btn a11y-prompt__btn--primary"
                   type="button" data-a11y-action="enable">
-            Enable calm view
+            Enable Reading Mode
           </button>
           <button class="a11y-prompt__btn a11y-prompt__btn--ghost"
                   type="button" data-a11y-action="dismiss">
