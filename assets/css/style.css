@@ -124,6 +124,9 @@ nav.scrolled{
 }
 .nav-logo span{color:var(--cyan)}
 .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+/* Mobile drawer markup is in the DOM for all viewports but hidden on
+   desktop; the @media(max-width:768px) block flips this. */
+.nav-links-mobile{display:none}
 .nav-links a{
   font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;
   color:var(--text-mid);text-decoration:none;
@@ -927,34 +930,42 @@ body.nav-locked{overflow:hidden}
   nav{padding:1rem 1.25rem}
   .nav-toggle{display:inline-flex}
 
-  /* Convert nav-links into a slide-in drawer */
-  .nav-links{
+  /* Hide the in-nav desktop list, show the out-of-nav drawer. */
+  .nav-links-desktop{display:none}
+
+  /* Mobile drawer — lives at body level so the navbar's backdrop-filter
+     (added on scroll) can't trap it as a containing block. */
+  .nav-links-mobile{
     display:flex;
     position:fixed;top:0;right:0;bottom:0;
     width:min(82vw,320px);
     flex-direction:column;align-items:flex-start;
-    gap:0;
+    gap:0;list-style:none;
     background:rgba(2,4,9,.97);
     backdrop-filter:blur(20px);
     -webkit-backdrop-filter:blur(20px);
     border-left:1px solid rgba(0,212,255,.12);
     padding:5.5rem 1.75rem 2rem;
-    z-index:500;
+    z-index:600;
     transform:translateX(100%);
     transition:transform .35s cubic-bezier(.4,0,.2,1);
     overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
-  .nav-links.is-open{transform:translateX(0)}
-  .nav-links li{width:100%;border-bottom:1px solid rgba(0,212,255,.06)}
-  .nav-links li:last-child{border-bottom:none;margin-top:1rem}
-  .nav-links li.nav-dot-li{display:none}
-  .nav-links a{
+  .nav-links-mobile.is-open{transform:translateX(0)}
+  .nav-links-mobile li{width:100%;border-bottom:1px solid rgba(0,212,255,.06)}
+  .nav-links-mobile li:last-child{border-bottom:none;margin-top:1rem}
+  .nav-links-mobile li.nav-dot-li{display:none}
+  .nav-links-mobile a{
     display:block;width:100%;
-    font-size:.85rem;letter-spacing:.2em;
-    padding:1.1rem 0;color:var(--white);
+    font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;
+    padding:1.1rem 0;color:var(--white);text-decoration:none;
+    transition:color .2s;
   }
-  .nav-links a::after{display:none}
-  .nav-hire{
+  .nav-links-mobile a:hover,
+  .nav-links-mobile a:focus-visible{color:var(--cyan)}
+  .nav-links-mobile a::after{display:none}
+  .nav-links-mobile .nav-hire{
     text-align:center;padding:.85rem 1.1rem !important;
     font-size:.7rem !important;
   }

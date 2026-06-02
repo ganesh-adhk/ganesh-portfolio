@@ -86,14 +86,7 @@
 <!-- NAV -->
 <nav id="navbar">
   <a href="#hero" class="nav-logo">GA<span>.</span></a>
-  <button id="nav-toggle" class="nav-toggle" type="button"
-          aria-label="Open navigation menu" aria-controls="nav-links"
-          aria-expanded="false">
-    <span class="nav-toggle-bar"></span>
-    <span class="nav-toggle-bar"></span>
-    <span class="nav-toggle-bar"></span>
-  </button>
-  <ul class="nav-links" id="nav-links">
+  <ul class="nav-links nav-links-desktop">
     <li class="nav-dot-li"><span class="nav-dot"></span></li>
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -102,8 +95,29 @@
     <li><a href="#contact">Contact</a></li>
     <li><a href="mailto:ganesh@adhikariganesh.com.np" class="nav-hire">Hire Me</a></li>
   </ul>
-  <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
+  <button id="nav-toggle" class="nav-toggle" type="button"
+          aria-label="Open navigation menu" aria-controls="nav-links"
+          aria-expanded="false">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
 </nav>
+<!-- Mobile drawer + backdrop live OUTSIDE <nav> on purpose: when the
+     navbar gets .scrolled it gains backdrop-filter, which makes nav a
+     containing block for any position:fixed descendant. That would clip
+     the drawer and backdrop to the navbar's height (the "distortion"). -->
+<ul class="nav-links nav-links-mobile" id="nav-links" role="navigation"
+    aria-label="Mobile navigation">
+  <li class="nav-dot-li"><span class="nav-dot"></span></li>
+  <li><a href="#about">About</a></li>
+  <li><a href="#skills">Skills</a></li>
+  <li><a href="#experience">Experience</a></li>
+  <li><a href="#projects">Projects</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="mailto:ganesh@adhikariganesh.com.np" class="nav-hire">Hire Me</a></li>
+</ul>
+<div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
 
 <!-- ════════ HERO ════════ -->
 <section id="hero">

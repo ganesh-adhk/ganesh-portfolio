@@ -748,6 +748,36 @@
   })();
 
   // -------------------------------------------------------------------------
+  // LauncherPill — small floating "Reading Mode" launcher visible whenever
+  // Reading Mode is NOT active. Gives users a one-tap way to open the
+  // calm-mode prompt at any time (the StruggleDetector still also fires
+  // it automatically, but that signal is subtle by design — the launcher
+  // is the discoverable, deliberate entry point).
+  // CSS handles visibility via :root[data-a11y-mode="reduced"].
+  // -------------------------------------------------------------------------
+  const LauncherPill = (() => {
+    let btn = null;
+    function ensure() {
+      if (btn) return btn;
+      btn = document.createElement('button');
+      btn.className = 'a11y-launcher';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Open Reading Mode options');
+      btn.innerHTML = `
+        <span class="a11y-launcher__icon" aria-hidden="true">📖</span>
+        <span class="a11y-launcher__label">Reading Mode</span>
+      `;
+      btn.addEventListener('click', () => {
+        // Manual click overrides snooze (the user is asking on purpose).
+        PromptController.show();
+      });
+      document.body.appendChild(btn);
+      return btn;
+    }
+    return { ensure };
+  })();
+
+  // -------------------------------------------------------------------------
   // Boot
   // -------------------------------------------------------------------------
   function init() {
@@ -770,6 +800,10 @@
     } catch (_) { /* matchMedia not available */ }
 
     StruggleDetector.start();
+
+    // Always-available manual entry to the prompt. CSS hides it while
+    // Reading Mode is active, so it never competes with the Exit pill.
+    LauncherPill.ensure();
   }
 
   if (document.readyState === 'loading') {
