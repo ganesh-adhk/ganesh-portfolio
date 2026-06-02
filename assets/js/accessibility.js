@@ -115,6 +115,229 @@
   })();
 
   // -------------------------------------------------------------------------
+  // VoiceReader — browser-native read-aloud, available only in Reading Mode.
+  //
+  // Uses window.speechSynthesis (Web Speech API). We walk the main content
+  // sections in document order, build a queue of readable blocks (headings,
+  // paragraphs, list items, role/company/project titles, etc.), then speak
+  // each one as a separate SpeechSynthesisUtterance. Per-block utterances:
+  //   - sidestep the Chrome ~15s auto-pause bug for long monologues
+  //   - let us highlight the *currently* spoken element
+  //   - let us implement Skip / Pause / Resume cleanly
+  // -------------------------------------------------------------------------
+  const VoiceReader = (() => {
+    const SUPPORTED = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+    // Order matters — we read top-to-bottom through the page.
+    const SECTION_ORDER = [
+      '#hero', '#about', '#skills', '#experience',
+      '#projects', '#education', '#contact',
+    ];
+    // Within each section, these selectors define the readable units.
+    const READABLE_SEL = [
+      'h1', 'h2', 'h3', 'h4',
+      'p',
+      'li',
+      '.exp-role', '.exp-company', '.exp-date', '.exp-type',
+      '.proj-name', '.proj-domain', '.proj-desc',
+      '.skill-name', '.skill-desc',
+      '.edu-degree', '.edu-uni', '.edu-quote',
+      '.about-body', '.about-stat-label',
+      '.hero-sub', '.contact-desc',
+    ].join(', ');
+
+    let queue = [];      // [{el, text}]
+    let idx = 0;
+    let playing = false;
+    let paused = false;
+    let controls = null;
+    let label = null;
+    // Set to true right before we call speechSynthesis.cancel() so the
+    // utterance's onend handler knows the end was forced (don't auto-advance).
+    let suppressEndOnce = false;
+
+    function collect() {
+      const seen = new WeakSet();
+      const out = [];
+      SECTION_ORDER.forEach((sel) => {
+        const sec = document.querySelector(sel);
+        if (!sec) return;
+        sec.querySelectorAll(READABLE_SEL).forEach((el) => {
+          if (seen.has(el)) return;
+          // Skip if any ancestor is already queued — we read the outer block
+          // (e.g. <li>) and don't want to also read its nested <span>s.
+          let p = el.parentElement;
+          while (p) { if (seen.has(p)) return; p = p.parentElement; }
+          const txt = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+          if (txt && txt.length > 1) {
+            seen.add(el);
+            out.push({ el, text: txt });
+          }
+        });
+      });
+      return out;
+    }
+
+    function highlight(item, on) {
+      if (item && item.el) item.el.classList.toggle('a11y-speaking', !!on);
+    }
+    function clearAllHighlights() {
+      document.querySelectorAll('.a11y-speaking').forEach((el) => {
+        el.classList.remove('a11y-speaking');
+      });
+    }
+
+    function speakNext() {
+      if (idx >= queue.length) { stop(); return; }
+      const item = queue[idx];
+      highlight(item, true);
+      try {
+        item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (_) {}
+
+      const u = new SpeechSynthesisUtterance(item.text);
+      u.lang = 'en-US';
+      u.rate = 1.0;
+      u.pitch = 1.0;
+      u.volume = 1.0;
+      const handleEnd = () => {
+        highlight(item, false);
+        // If we just cancelled deliberately (stop / skip), don't auto-advance.
+        if (suppressEndOnce) { suppressEndOnce = false; return; }
+        idx++;
+        if (playing && !paused) speakNext();
+      };
+      u.onend = handleEnd;
+      u.onerror = handleEnd;
+      window.speechSynthesis.speak(u);
+    }
+
+    function play() {
+      if (!SUPPORTED) return;
+      if (paused) {
+        // Resume a paused utterance instead of restarting.
+        window.speechSynthesis.resume();
+        paused = false;
+        updateUI();
+        return;
+      }
+      // Fresh run from the top — make sure any prior session is cleared.
+      if (playing) {
+        suppressEndOnce = true;
+        window.speechSynthesis.cancel();
+      } else {
+        window.speechSynthesis.cancel();
+      }
+      queue = collect();
+      if (!queue.length) return;
+      idx = 0;
+      playing = true;
+      paused = false;
+      updateUI();
+      speakNext();
+    }
+
+    function pause() {
+      if (!SUPPORTED || !playing) return;
+      window.speechSynthesis.pause();
+      paused = true;
+      updateUI();
+    }
+
+    function stop() {
+      if (!SUPPORTED) return;
+      if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        suppressEndOnce = true;
+        window.speechSynthesis.cancel();
+      }
+      clearAllHighlights();
+      queue = []; idx = 0; playing = false; paused = false;
+      updateUI();
+    }
+
+    function skip() {
+      if (!SUPPORTED || !playing) return;
+      const item = queue[idx];
+      highlight(item, false);
+      suppressEndOnce = true;
+      window.speechSynthesis.cancel();
+      idx++;
+      if (idx < queue.length) {
+        // If paused, just stage the next one and stay paused-ish: simplest
+        // behaviour is to resume playback on skip.
+        paused = false;
+        speakNext();
+      } else {
+        stop();
+      }
+    }
+
+    function updateUI() {
+      if (!controls) return;
+      const playBtn = controls.querySelector('[data-action="play"]');
+      const skipBtn = controls.querySelector('[data-action="skip"]');
+      const stopBtn = controls.querySelector('[data-action="stop"]');
+      const isLivePlaying = playing && !paused;
+      playBtn.textContent = isLivePlaying ? '⏸' : '▶';
+      playBtn.setAttribute(
+        'aria-label',
+        isLivePlaying ? 'Pause read aloud'
+          : paused ? 'Resume read aloud' : 'Start read aloud'
+      );
+      controls.classList.toggle('is-playing', isLivePlaying);
+      controls.classList.toggle('is-paused', paused);
+      skipBtn.disabled = !playing;
+      stopBtn.disabled = !playing;
+      if (label) {
+        label.textContent = isLivePlaying ? 'Reading…'
+                          : paused ? 'Paused'
+                          : 'Read Aloud';
+      }
+    }
+
+    function ensure() {
+      if (controls || !SUPPORTED) return controls;
+      controls = document.createElement('div');
+      controls.className = 'a11y-voice';
+      controls.setAttribute('role', 'toolbar');
+      controls.setAttribute('aria-label', 'Read aloud controls');
+      controls.innerHTML = `
+        <button type="button" class="a11y-voice__btn" data-action="play"
+                aria-label="Start read aloud">▶</button>
+        <button type="button" class="a11y-voice__btn" data-action="skip"
+                aria-label="Skip current paragraph" disabled>⏭</button>
+        <button type="button" class="a11y-voice__btn" data-action="stop"
+                aria-label="Stop read aloud" disabled>⏹</button>
+        <span class="a11y-voice__label">Read Aloud</span>
+      `;
+      label = controls.querySelector('.a11y-voice__label');
+      controls.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-action]');
+        if (!b || b.disabled) return;
+        const action = b.dataset.action;
+        if (action === 'play') (playing && !paused) ? pause() : play();
+        else if (action === 'skip') skip();
+        else if (action === 'stop') stop();
+      });
+      document.body.appendChild(controls);
+
+      // Safety: stop speaking if the user leaves the tab.
+      window.addEventListener('beforeunload', stop);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && playing && !paused) pause();
+      });
+      return controls;
+    }
+
+    function sync(enabled) {
+      if (enabled && SUPPORTED) ensure();
+      else if (!enabled && playing) stop();
+    }
+
+    return { sync, play, pause, stop, skip, isSupported: () => SUPPORTED };
+  })();
+
+  // -------------------------------------------------------------------------
   // ModeApplicator — single source of truth for reduced-noise on/off.
   // -------------------------------------------------------------------------
   const ModeApplicator = (() => {
@@ -150,6 +373,7 @@
       document.body.classList.toggle('a11y-reduce-bg', enabled);
       StateManager.setReduced(enabled);
       ExitPill.sync(enabled);
+      VoiceReader.sync(enabled);
       notify();
     }
 
@@ -570,5 +794,12 @@
     },
     showPromptNow() { PromptController.show(StruggleDetector.getLastSignalEl()); },
     getScore: () => StruggleDetector.getScore(),
+    voice: {
+      play:   () => VoiceReader.play(),
+      pause:  () => VoiceReader.pause(),
+      stop:   () => VoiceReader.stop(),
+      skip:   () => VoiceReader.skip(),
+      isSupported: () => VoiceReader.isSupported(),
+    },
   };
 })(window);

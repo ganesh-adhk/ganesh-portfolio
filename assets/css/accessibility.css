@@ -327,7 +327,75 @@
   outline-offset: 2px;
 }
 
-/* 18. Honor OS-level reduced-motion regardless of calm mode. --------------- */
+/* 18. Voice Reader toolbar — only visible in Reading Mode. ----------------- */
+.a11y-voice {
+  display: none;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: fixed;
+  bottom: 70px;            /* sits above the Exit Reading Mode pill */
+  right: 18px;
+  z-index: 2147482000;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #c2cadb;
+  box-shadow: 0 6px 18px rgba(11, 15, 26, 0.12);
+  font: 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Arial, sans-serif;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice__btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #006d8f;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice__btn:hover:not([disabled]) {
+  background: #eaf6fb;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice__btn:focus-visible {
+  outline: var(--a11y-focus-ring);
+  outline-offset: 2px;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice__btn[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice.is-playing .a11y-voice__btn[data-action="play"] {
+  background: #006d8f;
+  color: #ffffff;
+}
+:root[data-a11y-mode="reduced"] .a11y-voice__label {
+  font-weight: 600;
+  color: #0e1116;
+  padding: 0 8px 0 4px;
+  min-width: 78px;
+  text-align: left;
+}
+
+/* 19. Highlight for the sentence/block currently being spoken. ------------- */
+:root[data-a11y-mode="reduced"] .a11y-speaking {
+  background: #fff8d6 !important;
+  box-shadow:
+    -8px 0 0 #fff8d6,
+    8px 0 0 #fff8d6,
+    inset 3px 0 0 #d4a017 !important;
+  border-radius: 2px;
+  color: #0e1116 !important;
+}
+
+/* 20. Honor OS-level reduced-motion regardless of calm mode. --------------- */
 @media (prefers-reduced-motion: reduce) {
   :root [data-accessible-motion="decorative"] {
     animation: none !important;
