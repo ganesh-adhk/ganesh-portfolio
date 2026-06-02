@@ -870,6 +870,46 @@ footer{
 @keyframes slideUp{from{transform:translateY(110%)}to{transform:translateY(0)}}
 
 /* ─── RESPONSIVE ────────────────────────────────────────── */
+
+/* ----- Hamburger button (mobile only) — invisible by default ----------- */
+.nav-toggle{
+  display:none;
+  width:44px;height:44px;
+  background:transparent;border:1px solid rgba(0,212,255,.25);
+  padding:0;
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;
+  cursor:pointer;
+  z-index:610;
+  border-radius:6px;
+  transition:border-color .25s,background .25s;
+}
+.nav-toggle:hover{border-color:var(--cyan);background:var(--cyan-dim)}
+.nav-toggle-bar{
+  display:block;width:20px;height:2px;background:var(--cyan);
+  transition:transform .3s,opacity .25s;
+  transform-origin:center;
+}
+.nav-toggle.is-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.is-open .nav-toggle-bar:nth-child(2){opacity:0}
+.nav-toggle.is-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* Backdrop behind the mobile drawer */
+.nav-backdrop{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(2,4,9,.6);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  z-index:480;
+  opacity:0;transition:opacity .3s;
+  pointer-events:none;
+}
+.nav-backdrop.is-open{display:block;opacity:1;pointer-events:auto}
+
+/* Body lock while drawer open (set by JS) */
+body.nav-locked{overflow:hidden}
+
+/* ----- Existing 1024 collapse (kept as-is) ----------------------------- */
 @media(max-width:1024px){
   .hero-inner{grid-template-columns:1fr;gap:3rem}
   .hero-right{display:none}
@@ -879,10 +919,182 @@ footer{
   .edu-inner{grid-template-columns:1fr}
   .contact-inner{grid-template-columns:1fr}
   .projects-grid{grid-template-columns:1fr}
+  .projects-header{flex-direction:column;align-items:flex-start;gap:1rem}
 }
+
+/* ----- Tablet / Mobile (≤ 768px) --------------------------------------- */
 @media(max-width:768px){
-  nav{padding:1.25rem 1.5rem}
-  .nav-links{display:none}
-  .hero-meta{gap:1.5rem}
+  nav{padding:1rem 1.25rem}
+  .nav-toggle{display:inline-flex}
+
+  /* Convert nav-links into a slide-in drawer */
+  .nav-links{
+    display:flex;
+    position:fixed;top:0;right:0;bottom:0;
+    width:min(82vw,320px);
+    flex-direction:column;align-items:flex-start;
+    gap:0;
+    background:rgba(2,4,9,.97);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-left:1px solid rgba(0,212,255,.12);
+    padding:5.5rem 1.75rem 2rem;
+    z-index:500;
+    transform:translateX(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;
+  }
+  .nav-links.is-open{transform:translateX(0)}
+  .nav-links li{width:100%;border-bottom:1px solid rgba(0,212,255,.06)}
+  .nav-links li:last-child{border-bottom:none;margin-top:1rem}
+  .nav-links li.nav-dot-li{display:none}
+  .nav-links a{
+    display:block;width:100%;
+    font-size:.85rem;letter-spacing:.2em;
+    padding:1.1rem 0;color:var(--white);
+  }
+  .nav-links a::after{display:none}
+  .nav-hire{
+    text-align:center;padding:.85rem 1.1rem !important;
+    font-size:.7rem !important;
+  }
+
+  /* Hero typography tightening */
+  #hero{padding-top:5rem}
+  .hero-title{font-size:clamp(3rem,13vw,5rem);letter-spacing:.01em}
+  .hero-badge{font-size:.55rem;padding:.4rem .8rem;margin-bottom:1.75rem}
+  .hero-sub{font-size:.8rem;line-height:1.75}
+  .hero-meta{gap:1.25rem;margin-top:2rem}
+  .hero-meta-val{font-size:2rem}
+  .hero-sep{height:40px}
+  .hero-ctas{margin-top:2rem;gap:.6rem}
+  .hero-ctas .btn{
+    flex:1 1 calc(50% - .3rem);justify-content:center;
+    padding:.75rem .9rem;font-size:.55rem;
+  }
+  .hero-scroll{display:none}
+
+  /* Section labels + titles */
+  .sec-label{font-size:.55rem;letter-spacing:.35em}
+  .about-title,
+  .skills-title,
+  .exp-title,
+  .projects-title,
+  .edu-title,
+  .contact-title{
+    font-size:clamp(1.8rem,7vw,2.6rem) !important;
+    margin-bottom:2rem;line-height:1.05;
+  }
+
+  /* About */
   .about-stat-grid{grid-template-columns:1fr 1fr}
+  .about-body{font-size:.78rem;line-height:1.85}
+  .about-card{padding:1.5rem}
+  .competency{padding:1rem;gap:.85rem}
+
+  /* Skills */
+  .skills-grid{grid-template-columns:1fr;gap:1px}
+  .skill-card{padding:1.75rem 1.5rem}
+  .skill-card-num{font-size:2.25rem}
+  .skill-emoji{font-size:1.6rem}
+
+  /* Experience */
+  #experience{padding:clamp(3.5rem,8vh,6rem) 0}
+  .exp-item{
+    padding:2rem 0;
+    gap:.6rem;
+  }
+  .exp-item:hover{padding-left:0}
+  .exp-left{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline}
+  .exp-date{margin-bottom:0}
+  .exp-company{margin-bottom:0}
+  .exp-type{margin-bottom:0;font-size:.5rem}
+  .exp-role{font-size:.95rem;margin-bottom:.6rem}
+  .exp-bullets li{font-size:.72rem;line-height:1.75}
+
+  /* Projects */
+  #projects{padding:clamp(3.5rem,8vh,6rem) 0}
+  .proj-card{padding:1.75rem 1.5rem}
+  .proj-num{font-size:2.5rem}
+  .proj-arrow{width:34px;height:34px}
+  .proj-desc{font-size:.78rem;margin-bottom:1.25rem}
+  .proj-features{margin-bottom:1.25rem}
+  .proj-features li{font-size:.72rem}
+
+  /* Tech strip */
+  #techstrip{padding:2rem 0}
+  .strip-track{gap:2.25rem;animation-duration:30s}
+  .strip-item{font-size:.6rem;letter-spacing:.2em}
+
+  /* Education */
+  #education{padding:clamp(3.5rem,8vh,6rem) 0}
+  .edu-card{padding:1.75rem 1.5rem}
+  .edu-visual{padding:1.75rem 1.5rem}
+
+  /* Contact */
+  #contact{padding:clamp(3.5rem,8vh,6rem) 0}
+  .contact-link{padding:1rem 1.1rem}
+  .contact-link-val{font-size:.72rem;word-break:break-all}
+  .contact-link-icon{width:38px;height:38px;font-size:.85rem}
+  .form-input,.form-textarea{font-size:.85rem;padding:.85rem .9rem}
+  .form-submit{width:100%;justify-content:center}
+
+  /* Footer */
+  footer{
+    flex-direction:column;gap:1.25rem;text-align:center;
+    padding:2.5rem 1.5rem;
+  }
+  .footer-nav{flex-wrap:wrap;justify-content:center;gap:1rem}
+  .footer-copy{font-size:.6rem;line-height:1.7}
+
+  /* Loader */
+  .ld-name{font-size:2rem}
+  .ld-track{width:200px}
+}
+
+/* ----- Phone (≤ 540px) — fine-grained squeeze ------------------------- */
+@media(max-width:540px){
+  .hero-title{font-size:clamp(2.5rem,14vw,3.8rem)}
+  .hero-meta{flex-wrap:wrap;gap:.85rem 1.25rem}
+  .hero-sep{display:none}
+  .hero-meta-item{flex:1 1 calc(33% - 1rem);min-width:80px}
+  .hero-meta-val{font-size:1.7rem}
+  .hero-ctas .btn{flex:1 1 100%}
+
+  .about-stat-val{font-size:2rem}
+  .about-open{flex-direction:column;align-items:flex-start;gap:.8rem}
+
+  .exp-item{padding:1.5rem 0}
+  .proj-card,.skill-card,.edu-card,.about-card{padding:1.4rem 1.25rem}
+
+  .contact-link{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .contact-link-arrow{align-self:flex-end;margin-top:-1.5rem}
+
+  .footer-nav a{font-size:.65rem}
+}
+
+/* ----- Very small phones (≤ 380px) — last-resort guards ---------------- */
+@media(max-width:380px){
+  nav{padding:.85rem 1rem}
+  .hero-title{font-size:clamp(2.2rem,14vw,3rem)}
+  .hero-badge{font-size:.5rem;letter-spacing:.2em}
+  .skill-card,.proj-card{padding:1.25rem 1.1rem}
+}
+
+/* ----- Touch / no-hover devices — disable the custom cursor system ----- */
+@media(hover:none) and (pointer:coarse){
+  body,.proj-card{cursor:auto !important}
+  #cur,#cur-ring{display:none !important}
+  /* Hover-only reveals shouldn't trap mobile users */
+  .skill-card:hover{background:var(--bg)}
+  .proj-card:hover{background:var(--bg)}
+  .exp-item:hover{padding-left:0}
+  .skill-card:hover::after{transform:scaleX(0)}
+  .strip-track:hover{animation-play-state:running}
+}
+
+/* ----- Landscape phones (short viewports) — keep hero readable --------- */
+@media(max-height:520px) and (orientation:landscape){
+  #hero{min-height:auto;padding-top:5rem;padding-bottom:3rem}
+  .hero-title{font-size:clamp(2.2rem,7vw,3.5rem)}
 }

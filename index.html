@@ -86,8 +86,15 @@
 <!-- NAV -->
 <nav id="navbar">
   <a href="#hero" class="nav-logo">GA<span>.</span></a>
-  <ul class="nav-links">
-    <li><span class="nav-dot"></span></li>
+  <button id="nav-toggle" class="nav-toggle" type="button"
+          aria-label="Open navigation menu" aria-controls="nav-links"
+          aria-expanded="false">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li class="nav-dot-li"><span class="nav-dot"></span></li>
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -95,6 +102,7 @@
     <li><a href="#contact">Contact</a></li>
     <li><a href="mailto:ganesh@adhikariganesh.com.np" class="nav-hire">Hire Me</a></li>
   </ul>
+  <div id="nav-backdrop" class="nav-backdrop" aria-hidden="true"></div>
 </nav>
 
 <!-- ════════ HERO ════════ -->

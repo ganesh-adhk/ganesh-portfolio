@@ -34,6 +34,49 @@
       navbar.classList.toggle('scrolled',window.scrollY>60);
     });
 
+    /* ─── MOBILE NAV (hamburger drawer) ───
+       Wires the hamburger button up to the slide-in nav-links drawer.
+       Open/close swaps a class on three elements (toggle button, drawer,
+       backdrop) and locks body scroll. Closes on: link click, backdrop
+       click, Escape key, or viewport widening past the mobile breakpoint. */
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+    const navBackdrop = document.getElementById('nav-backdrop');
+    if (navToggle && navLinks && navBackdrop) {
+      const openNav = () => {
+        navToggle.classList.add('is-open');
+        navToggle.setAttribute('aria-expanded','true');
+        navToggle.setAttribute('aria-label','Close navigation menu');
+        navLinks.classList.add('is-open');
+        navBackdrop.classList.add('is-open');
+        document.body.classList.add('nav-locked');
+      };
+      const closeNav = () => {
+        navToggle.classList.remove('is-open');
+        navToggle.setAttribute('aria-expanded','false');
+        navToggle.setAttribute('aria-label','Open navigation menu');
+        navLinks.classList.remove('is-open');
+        navBackdrop.classList.remove('is-open');
+        document.body.classList.remove('nav-locked');
+      };
+      const isOpen = () => navLinks.classList.contains('is-open');
+
+      navToggle.addEventListener('click', () => { isOpen() ? closeNav() : openNav(); });
+      navBackdrop.addEventListener('click', closeNav);
+      // Close after navigating via in-page link.
+      navLinks.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => { if (isOpen()) closeNav(); });
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) closeNav();
+      });
+      // If the viewport grows past mobile, make sure we don't leave the
+      // drawer state stuck on (e.g. landscape rotation on tablet).
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && isOpen()) closeNav();
+      });
+    }
+
     /* ─── REVEAL ON SCROLL ────────────── */
     const revEls=document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
     const obs=new IntersectionObserver((entries)=>{

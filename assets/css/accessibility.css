@@ -577,6 +577,27 @@
     bottom: 12px;
     max-width: none;
   }
+  /* Reading Mode pills: compact, edge-hugging, stacked. */
+  :root[data-a11y-mode="reduced"] .a11y-exit {
+    bottom: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  :root[data-a11y-mode="reduced"] .a11y-voice {
+    bottom: 60px;
+    right: 12px;
+    left: auto;
+    padding: 4px 8px 4px 4px;
+  }
+  :root[data-a11y-mode="reduced"] .a11y-voice__label {
+    /* Hide label on very narrow screens — icons are self-explanatory. */
+    display: none;
+  }
+  :root[data-a11y-mode="reduced"] .a11y-voice__btn {
+    width: 34px; height: 34px;          /* larger touch targets */
+    font-size: 14px;
+  }
 }
 
 /* ---------- Legacy compatibility (existing portfolio markup) --------------- */
