@@ -1,0 +1,85 @@
+# robots.txt — adhikariganesh.com.np
+# Portfolio of Ganesh Adhikari, Senior Software Engineer.
+
+# Default: allow all well-behaved crawlers full access.
+User-agent: *
+Allow: /
+Disallow:
+
+# Explicitly welcome major search engines.
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# AI / LLM crawlers — opted in so the portfolio is discoverable
+# by AI-assisted job search and recruiter assistants.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Sitemap location for search engines and AI crawlers.
+Sitemap: https://adhikariganesh.com.np/sitemap.xml
+
+# Host hint (used by some crawlers, harmless to others).
+Host: https://adhikariganesh.com.np
